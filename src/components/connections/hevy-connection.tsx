@@ -47,8 +47,8 @@ export function HevyConnection({ hevy, readOnly }: { hevy: HevyView; readOnly: b
           aria-describedby="hevy-key-hint"
         />
         <p id="hevy-key-hint" className="text-xs text-muted-foreground">
-          Needs Hevy Pro. Get it at hevy.com → Settings → Developer (developers.hevy.com → API key). Checked
-          with one request, stored encrypted, and only the last 4 characters are ever shown.
+          Needs Hevy Pro. Create it at developers.hevy.com → API key &amp; webhooks. Checked with one request,
+          stored encrypted, and only the last 4 characters are ever shown.
         </p>
       </div>
       <div className="flex gap-2">

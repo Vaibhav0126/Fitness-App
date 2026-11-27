@@ -82,7 +82,9 @@ export async function saveHevyKey(
     info = await factory(apiKey).userInfo();
   } catch (e) {
     if (e instanceof HevyApiError && e.unauthorized)
-      throw new HevyKeyError("Hevy rejected that key. Copy it again from hevy.com → Settings → Developer.");
+      throw new HevyKeyError(
+        "Hevy rejected that key. Copy it again from developers.hevy.com → API key & webhooks.",
+      );
     if (e instanceof HevyApiError) throw new HevyKeyError(e.message);
     throw e;
   }
