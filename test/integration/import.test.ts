@@ -28,13 +28,11 @@ beforeAll(async () => {
   await db
     .insert(user)
     .values({ id: U, name: "Import Test", email: `${U}@example.test`, emailVerified: true });
-  await db
-    .insert(userSettings)
-    .values({
-      userId: U,
-      timeZone: "Asia/Tokyo",
-      config: defaultPlanConfig({ timeZone: "Asia/Tokyo", planStart: "2026-11-18" }),
-    });
+  await db.insert(userSettings).values({
+    userId: U,
+    timeZone: "Asia/Tokyo",
+    config: defaultPlanConfig({ timeZone: "Asia/Tokyo", planStart: "2026-11-18" }),
+  });
 });
 
 afterAll(async () => {
