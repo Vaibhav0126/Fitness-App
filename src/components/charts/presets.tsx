@@ -1,10 +1,8 @@
 "use client";
+import { shortDate } from "@/lib/charts/format";
 import { Chart } from "./chart";
 
 /* Serializable wrappers so server components can render charts. */
-
-const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-export const shortDate = (d: string) => `${Number(d.slice(8, 10))} ${MONTHS[Number(d.slice(5, 7)) - 1]}`;
 
 const num = (v: number, dp: number) =>
   v.toLocaleString("en-US", { maximumFractionDigits: dp, minimumFractionDigits: dp });
@@ -143,7 +141,7 @@ export function IntervalCharts({
           {
             key: "hr",
             label: "Max HR",
-            kind: "bar",
+            kind: "points",
             values: intervals.map((i) => i.hr),
             color,
             format: (v) => `${Math.round(v)} bpm`,
@@ -161,7 +159,7 @@ export function IntervalCharts({
             {
               key: "cad",
               label: "Cadence",
-              kind: "bar",
+              kind: "points",
               values: intervals.filter((i) => i.kind === "run").map((i) => i.cadence),
               color: "var(--series-1)",
               format: (v) => `${Math.round(v)} spm`,

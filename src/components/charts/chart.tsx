@@ -13,7 +13,7 @@ import { useWidth } from "./use-width";
 export interface Series {
   key: string;
   label: string;
-  kind: "line" | "dots" | "bar";
+  kind: "line" | "dots" | "bar" | "points";
   values: Array<number | null>;
   /** CSS color (a var()) — or per point, for bars coloured by category */
   color: string | ((i: number) => string);
@@ -51,7 +51,8 @@ export function Chart({
   height = 200,
   legend,
 }: ChartProps) {
-  const [ref, width] = useWidth<HTMLDivElement>();
+  const [ref, measured] = useWidth<HTMLDivElement>();
+  const width = measured ?? 0;
   const [hover, setHover] = useState<number | null>(null);
   const [table, setTable] = useState(false);
   const id = useId();
@@ -61,6 +62,7 @@ export function Chart({
   if (band) all.push(band.lo, band.hi);
   if (rule) all.push(rule.y);
   const hasBars = series.some((s) => s.kind === "bar");
+  const banded = series.some((s) => s.kind === "bar" || s.kind === "points");
   const scale = niceScale(Math.min(...all), Math.max(...all), 5, { zero: zero ?? hasBars });
   const dec = stepDecimals(scale.step);
   const iw = Math.max(10, width - M.left - M.right);
@@ -86,7 +88,7 @@ export function Chart({
   const tipLeft = hover != null && hx > width / 2;
 
   return (
-    <figure className="grid gap-2">
+    <figure className="grid min-w-0 gap-2">
       <figcaption className="flex items-baseline justify-between gap-2">
         <span className="text-sm font-medium">{title}</span>
         <button
@@ -124,7 +126,7 @@ export function Chart({
           <table className="w-full text-left text-xs">
             <thead className="sticky top-0 bg-muted">
               <tr>
-                <th className="px-2 py-1 font-medium">{hasBars ? "Item" : "Date"}</th>
+                <th className="px-2 py-1 font-medium">{banded ? "Item" : "Date"}</th>
                 {series.map((s) => (
                   <th key={s.key} className="px-2 py-1 font-medium">
                     {s.label}
@@ -147,184 +149,205 @@ export function Chart({
           </table>
         </div>
       ) : (
-        <div ref={ref} className="relative w-full touch-pan-y select-none">
-          <svg
-            width={width}
-            height={height}
-            role="img"
-            aria-label={`${title}. ${n} points. Use the Table button for values.`}
-            onPointerMove={(e) => pick(e.clientX, e.currentTarget.getBoundingClientRect())}
-            onPointerDown={(e) => pick(e.clientX, e.currentTarget.getBoundingClientRect())}
-            onPointerLeave={() => setHover(null)}
-            className="block overflow-visible"
-          >
-            {band ? (
-              <g>
-                <rect
-                  x={M.left}
-                  width={iw}
-                  y={cy(band.hi)}
-                  height={Math.max(0, cy(band.lo) - cy(band.hi))}
-                  fill="var(--chart-band)"
-                />
-              </g>
-            ) : null}
-            {scale.ticks.map((t) => (
-              <g key={t}>
-                <line
-                  x1={M.left}
-                  x2={M.left + iw}
-                  y1={cy(t)}
-                  y2={cy(t)}
-                  stroke="var(--chart-grid)"
-                  strokeWidth={1}
-                />
+        <div ref={ref} className="relative w-full min-w-0 touch-pan-y select-none" style={{ height }}>
+          {measured == null ? null : (
+            <svg
+              width={width}
+              height={height}
+              role="img"
+              aria-label={`${title}. ${n} points. Use the Table button for values.`}
+              onPointerMove={(e) => pick(e.clientX, e.currentTarget.getBoundingClientRect())}
+              onPointerDown={(e) => pick(e.clientX, e.currentTarget.getBoundingClientRect())}
+              onPointerLeave={() => setHover(null)}
+              className="block overflow-visible"
+            >
+              {band ? (
+                <g>
+                  <rect
+                    x={M.left}
+                    width={iw}
+                    y={cy(band.hi)}
+                    height={Math.max(0, cy(band.lo) - cy(band.hi))}
+                    fill="var(--chart-band)"
+                  />
+                </g>
+              ) : null}
+              {scale.ticks.map((t) => (
+                <g key={t}>
+                  <line
+                    x1={M.left}
+                    x2={M.left + iw}
+                    y1={cy(t)}
+                    y2={cy(t)}
+                    stroke="var(--chart-grid)"
+                    strokeWidth={1}
+                  />
+                  <text
+                    x={M.left - 6}
+                    y={cy(t)}
+                    dy="0.32em"
+                    textAnchor="end"
+                    className="fill-muted-foreground text-[10px] tabular-nums"
+                  >
+                    {t.toLocaleString("en-US", { minimumFractionDigits: dec, maximumFractionDigits: dec })}
+                  </text>
+                </g>
+              ))}
+              {rule ? (
+                <g>
+                  <line
+                    x1={M.left}
+                    x2={M.left + iw}
+                    y1={cy(rule.y)}
+                    y2={cy(rule.y)}
+                    stroke="var(--muted-foreground)"
+                    strokeDasharray="4 3"
+                    strokeWidth={1}
+                  />
+                  <text
+                    x={M.left + iw}
+                    y={cy(rule.y) - 4}
+                    textAnchor="end"
+                    className="fill-muted-foreground text-[10px]"
+                  >
+                    {rule.label}
+                  </text>
+                </g>
+              ) : null}
+              {labelIndices(n, Math.max(2, Math.floor(iw / 70))).map((i) => (
                 <text
-                  x={M.left - 6}
-                  y={cy(t)}
-                  dy="0.32em"
-                  textAnchor="end"
-                  className="fill-muted-foreground text-[10px] tabular-nums"
-                >
-                  {t.toLocaleString("en-US", { minimumFractionDigits: dec, maximumFractionDigits: dec })}
-                </text>
-              </g>
-            ))}
-            {rule ? (
-              <g>
-                <line
-                  x1={M.left}
-                  x2={M.left + iw}
-                  y1={cy(rule.y)}
-                  y2={cy(rule.y)}
-                  stroke="var(--muted-foreground)"
-                  strokeDasharray="4 3"
-                  strokeWidth={1}
-                />
-                <text
-                  x={M.left + iw}
-                  y={cy(rule.y) - 4}
-                  textAnchor="end"
+                  key={i}
+                  x={cx(i)}
+                  y={height - 8}
+                  textAnchor="middle"
                   className="fill-muted-foreground text-[10px]"
                 >
-                  {rule.label}
+                  {xFormat(x[i]!)}
                 </text>
-              </g>
-            ) : null}
-            {labelIndices(n, Math.max(2, Math.floor(iw / 70))).map((i) => (
-              <text
-                key={i}
-                x={cx(i)}
-                y={height - 8}
-                textAnchor="middle"
-                className="fill-muted-foreground text-[10px]"
-              >
-                {xFormat(x[i]!)}
-              </text>
-            ))}
-            {series.map((s) => {
-              if (s.kind === "bar") {
-                const base = cy(Math.max(scale.min, 0));
-                return (
-                  <g key={s.key}>
-                    {s.values.map((v, i) => {
-                      if (v == null) return null;
-                      const top = cy(v);
-                      const h = Math.max(1, base - top);
-                      const r = Math.min(4, h, barW / 2);
-                      const x0 = cx(i) - barW / 2;
-                      // rounded data-end, square at the baseline
-                      const d = `M${x0},${base}V${top + r}Q${x0},${top} ${x0 + r},${top}H${x0 + barW - r}Q${x0 + barW},${top} ${x0 + barW},${top + r}V${base}Z`;
-                      return (
-                        <path
-                          key={i}
-                          d={d}
-                          fill={colorOf(s, i)}
-                          opacity={hover == null || hover === i ? 1 : 0.55}
-                        />
-                      );
-                    })}
-                  </g>
-                );
-              }
-              const pts = s.values.map((v, i) => (v == null ? null : ([cx(i), cy(v)] as const)));
-              if (s.kind === "dots")
-                return (
-                  <g key={s.key}>
-                    {pts.map((p, i) =>
-                      p ? (
-                        <circle
-                          key={i}
-                          cx={p[0]}
-                          cy={p[1]}
-                          r={n > 60 ? 2 : 3}
-                          fill={colorOf(s, i)}
-                          opacity={0.55}
-                        />
-                      ) : null,
-                    )}
-                  </g>
-                );
-              let d = "";
-              let pen = false;
-              for (const p of pts) {
-                if (!p) {
-                  pen = false;
-                  continue;
+              ))}
+              {series.map((s) => {
+                if (s.kind === "bar") {
+                  const base = cy(Math.max(scale.min, 0));
+                  return (
+                    <g key={s.key}>
+                      {s.values.map((v, i) => {
+                        if (v == null) return null;
+                        const top = cy(v);
+                        const h = Math.max(1, base - top);
+                        const r = Math.min(4, h, barW / 2);
+                        const x0 = cx(i) - barW / 2;
+                        // rounded data-end, square at the baseline
+                        const d = `M${x0},${base}V${top + r}Q${x0},${top} ${x0 + r},${top}H${x0 + barW - r}Q${x0 + barW},${top} ${x0 + barW},${top + r}V${base}Z`;
+                        return (
+                          <path
+                            key={i}
+                            d={d}
+                            fill={colorOf(s, i)}
+                            opacity={hover == null || hover === i ? 1 : 0.55}
+                          />
+                        );
+                      })}
+                    </g>
+                  );
                 }
-                d += `${pen ? "L" : "M"}${p[0].toFixed(1)},${p[1].toFixed(1)}`;
-                pen = true;
-              }
-              const last = [...pts].reverse().find(Boolean);
-              return (
-                <g key={s.key}>
-                  <path
-                    d={d}
-                    fill="none"
-                    stroke={colorOf(s, 0)}
-                    strokeWidth={2}
-                    strokeLinejoin="round"
-                    strokeLinecap="round"
-                  />
-                  {last ? (
-                    <circle
-                      cx={last[0]}
-                      cy={last[1]}
-                      r={4}
-                      fill={colorOf(s, 0)}
-                      stroke="var(--card)"
+                const pts = s.values.map((v, i) => (v == null ? null : ([cx(i), cy(v)] as const)));
+                if (s.kind === "points")
+                  // Categorical points for values on a non-zero baseline (bars would exaggerate).
+                  return (
+                    <g key={s.key}>
+                      {pts.map((p, i) =>
+                        p ? (
+                          <circle
+                            key={i}
+                            cx={p[0]}
+                            cy={p[1]}
+                            r={hover === i ? 6 : 5}
+                            fill={colorOf(s, i)}
+                            stroke="var(--card)"
+                            strokeWidth={2}
+                          />
+                        ) : null,
+                      )}
+                    </g>
+                  );
+                if (s.kind === "dots")
+                  return (
+                    <g key={s.key}>
+                      {pts.map((p, i) =>
+                        p ? (
+                          <circle
+                            key={i}
+                            cx={p[0]}
+                            cy={p[1]}
+                            r={n > 60 ? 2 : 3}
+                            fill={colorOf(s, i)}
+                            opacity={0.55}
+                          />
+                        ) : null,
+                      )}
+                    </g>
+                  );
+                let d = "";
+                let pen = false;
+                for (const p of pts) {
+                  if (!p) {
+                    pen = false;
+                    continue;
+                  }
+                  d += `${pen ? "L" : "M"}${p[0].toFixed(1)},${p[1].toFixed(1)}`;
+                  pen = true;
+                }
+                const last = [...pts].reverse().find(Boolean);
+                return (
+                  <g key={s.key}>
+                    <path
+                      d={d}
+                      fill="none"
+                      stroke={colorOf(s, 0)}
                       strokeWidth={2}
+                      strokeLinejoin="round"
+                      strokeLinecap="round"
                     />
-                  ) : null}
-                </g>
-              );
-            })}
-            {hover != null && !hasBars ? (
-              <line
-                x1={hx}
-                x2={hx}
-                y1={M.top}
-                y2={M.top + ih}
-                stroke="var(--muted-foreground)"
-                strokeWidth={1}
-              />
-            ) : null}
-            {hover != null
-              ? series
-                  .filter((s) => s.kind !== "bar" && s.values[hover] != null)
-                  .map((s) => (
-                    <circle
-                      key={s.key}
-                      cx={hx}
-                      cy={cy(s.values[hover]!)}
-                      r={4}
-                      fill={colorOf(s, hover)}
-                      stroke="var(--card)"
-                      strokeWidth={2}
-                    />
-                  ))
-              : null}
-          </svg>
+                    {last ? (
+                      <circle
+                        cx={last[0]}
+                        cy={last[1]}
+                        r={4}
+                        fill={colorOf(s, 0)}
+                        stroke="var(--card)"
+                        strokeWidth={2}
+                      />
+                    ) : null}
+                  </g>
+                );
+              })}
+              {hover != null && !banded ? (
+                <line
+                  x1={hx}
+                  x2={hx}
+                  y1={M.top}
+                  y2={M.top + ih}
+                  stroke="var(--muted-foreground)"
+                  strokeWidth={1}
+                />
+              ) : null}
+              {hover != null
+                ? series
+                    .filter((s) => (s.kind === "line" || s.kind === "dots") && s.values[hover] != null)
+                    .map((s) => (
+                      <circle
+                        key={s.key}
+                        cx={hx}
+                        cy={cy(s.values[hover]!)}
+                        r={4}
+                        fill={colorOf(s, hover)}
+                        stroke="var(--card)"
+                        strokeWidth={2}
+                      />
+                    ))
+                : null}
+            </svg>
+          )}
           {hover != null ? (
             <div
               role="status"
