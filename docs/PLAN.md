@@ -127,11 +127,11 @@ Smaller items:
 
 ## 4. Phase plan
 
-- **1a:** pnpm scaffold, strict TS, ESLint/Prettier, Tailwind and shadcn, Drizzle schema and migrations, `pg` client, Better Auth (email/password, verification, reset via Resend, GitHub OAuth, linking by verified email), `scoped()` helper and isolation test, engine ported test-first (a reference-parity suite plus tests for each R5 difference), CI.
-- **1b:** settings and plan editor (form plus JSON view), CSV import (Hevy and Strong presets, mapping, 20-row preview, chunked batch), manual logger, Today/Next/Strength/Runs/Recovery pages, seed and demo. `loadEngineStore` is limited to the last 365 days (or cached per user) (PR #1 review).
-- **2:** tokens and Shortcut endpoint with docs, HAE parser and endpoint with interval charts, Hevy key and sync, cron, then Strava (feature-flagged, per R3).
+- **1a (done, PR #1):** pnpm scaffold, strict TS, ESLint/Prettier, Tailwind and shadcn, Drizzle schema and migrations, `pg` client, Better Auth (email/password, verification, reset via Resend, GitHub OAuth, linking by verified email), `scoped()` helper and isolation test, engine ported test-first (a reference-parity suite plus tests for each R5 difference), CI.
+- **1b (done):** onboarding; settings and plan editor (form plus JSON view); CSV import (Hevy and Strong presets, mapping, 20-row preview, chunked batch) and HAE v2 file upload (parsed in a Web Worker); idempotent merge-upserts with import history; manual logger and run feedback; Today/Next/Strength/Runs/Recovery pages with SVG charts; seed and demo; JSON export and account deletion; a 365-day store window plus a per-user cache (ADR 0005); a Playwright smoke test in CI. Moved forward from later phases: the HAE file parser (2), Playwright and export/delete (4). Deferred: imperial display.
+- **2:** tokens and Shortcut endpoint with docs, HAE push endpoint (`/api/ingest/hae`, reusing the 1b parser and merge), Hevy key and sync, cron, then Strava (feature-flagged, per R3).
 - **3:** Apple Health worker import (progress, cancel, dedupe), GPX/FIT/TCX.
-- **4:** landing page, README and diagrams, PWA, accessibility, Lighthouse, Playwright, privacy page, export and delete.
+- **4:** landing page, README and diagrams, PWA, accessibility, Lighthouse, more Playwright coverage, privacy page, imperial units display.
 - **5 (optional):** bring-your-own-key AI coach on non-Strava data, weekly digest.
 
 ## 5. Decisions (approved 2026-11-27)
