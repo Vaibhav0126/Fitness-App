@@ -1,5 +1,5 @@
 import "server-only";
-import { eq, isNull, or } from "drizzle-orm";
+import { and, eq, gte, isNull, or, sql } from "drizzle-orm";
 import { getDb, type Db } from "@/lib/db/client";
 import { scoped } from "@/lib/db/scoped";
 import {
@@ -12,24 +12,66 @@ import {
 } from "@/lib/db/schema";
 import type { EngineStore, ExerciseMeta, IntervalRow, WorkoutRow } from "@/lib/engine/types";
 
-/** Loads everything the engine needs for one user. All reads are scoped by userId. */
-export async function loadEngineStore(userId: string, db: Db = getDb()): Promise<EngineStore> {
+export const STORE_WINDOW_DAYS = 365;
+
+export interface StoreWindow {
+  /** Instant: workouts/sets on or after this are loaded. */
+  since: Date;
+  /** Calendar date (YYYY-MM-DD): metrics/feedback on or after this are loaded. */
+  sinceDate: string;
+}
+
+/** The last 365 days, extended back to planStart so run-plan progress stays complete. */
+export function storeWindow(now: Date, planStart?: string): StoreWindow {
+  const since = new Date(now.getTime() - STORE_WINDOW_DAYS * 86_400_000);
+  const planStartInstant = planStart ? new Date(`${planStart}T00:00:00Z`) : since;
+  const from = new Date(Math.min(since.getTime(), planStartInstant.getTime() - 86_400_000));
+  return { since: from, sinceDate: from.toISOString().slice(0, 10) };
+}
+
+/**
+ * Loads what the engine needs for one user (all reads scoped by userId):
+ * the last 365 days of metrics, workouts, sets and feedback, plus, for each exercise
+ * whose latest session is older than that, its latest session (for prescriptions and
+ * e1RM continuity).
+ */
+export async function loadEngineStore(
+  userId: string,
+  db: Db = getDb(),
+  window: StoreWindow = storeWindow(new Date()),
+): Promise<EngineStore> {
   const s = scoped(userId, db);
-  const [metrics, workouts, intervals, sets, feedback, aliases] = await Promise.all([
-    s.select(dailyMetric),
-    s.select(workout),
+  const [metrics, workouts, intervals, recentSets, olderLatestSets, feedback, aliases] = await Promise.all([
+    s.select(dailyMetric, gte(dailyMetric.date, window.sinceDate)),
+    s.select(workout, gte(workout.start, window.since)),
     db
       .select({ iv: workoutInterval })
       .from(workoutInterval)
       .innerJoin(workout, eq(workout.id, workoutInterval.workoutId))
-      .where(eq(workout.userId, userId)),
-    s.select(strengthSet),
-    s.select(runFeedback),
+      .where(and(eq(workout.userId, userId), gte(workout.start, window.since))),
+    s.select(strengthSet, gte(strengthSet.performedAt, window.since)),
+    db
+      .select()
+      .from(strengthSet)
+      .where(
+        and(
+          eq(strengthSet.userId, userId),
+          sql`(${strengthSet.exercise}, ${strengthSet.performedAt}) in (
+            select exercise, max(performed_at) from strength_set
+            where user_id = ${userId} and performed_at < ${window.since}
+              and exercise not in (
+                select exercise from strength_set where user_id = ${userId} and performed_at >= ${window.since}
+              )
+            group by exercise)`,
+        ),
+      ),
+    s.select(runFeedback, gte(runFeedback.date, window.sinceDate)),
     db
       .select()
       .from(exerciseAlias)
       .where(or(isNull(exerciseAlias.userId), eq(exerciseAlias.userId, userId))),
   ]);
+  const sets = [...olderLatestSets, ...recentSets];
 
   const ivByWorkout = new Map<string, IntervalRow[]>();
   for (const { iv } of intervals) {
