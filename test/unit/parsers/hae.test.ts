@@ -103,3 +103,72 @@ describe("helpers", () => {
     expect(classifyIntervals([5, 5, 5], c)).toEqual(["warmup", "walk", "cooldown"]);
   });
 });
+
+describe("real HAE shape: interval values under activities[i].metrics", () => {
+  const cls = { walkSpeedKmh: 5.5, marginKmh: 1 };
+  const parse = (json: unknown) => parseHaeFile(json, { timeZone: "Asia/Tokyo", runClassification: cls });
+
+  it("8×1:30 run / 2:00 walk: speeds, distances, HR and run/walk classification come from metrics", () => {
+    const json = JSON.parse(
+      readFileSync(path.resolve(import.meta.dirname, "../../fixtures/hae-workouts-real-8x90.json"), "utf8"),
+    );
+    const [w] = parse(json).workouts;
+    const ivs = w!.intervals!;
+    expect(ivs).toHaveLength(17);
+    expect(ivs.map((i) => i.kind)).toEqual([
+      "warmup",
+      ...Array.from({ length: 15 }, (_, i) => (i % 2 === 0 ? "run" : "walk")),
+      "cooldown",
+    ]);
+    const runs = ivs.filter((i) => i.kind === "run");
+    expect(runs).toHaveLength(8);
+    expect(runs.every((r) => r.durationS === 90)).toBe(true);
+    expect(runs[0]).toMatchObject({ avgSpeedKmh: 7.9, distanceM: 198, avgHr: 138, maxHr: 146 });
+    expect(
+      ivs.filter((i) => i.kind === "walk").every((i) => i.durationS === 120 && i.avgSpeedKmh === 5.4),
+    ).toBe(true);
+    expect(ivs.every((i) => (i.avgSpeedKmh ?? 0) > 0)).toBe(true);
+    expect(w!.start).toBe("2026-11-24T20:41:04.000Z");
+  });
+
+  it("falls back to top-level interval fields and derives speed from distance/activeDuration", () => {
+    const json = {
+      data: {
+        workouts: [
+          {
+            id: "fallback",
+            name: "Outdoor Run",
+            start: "2026-11-25 6:00:00 AM +0900",
+            activities: [
+              {
+                index: 1,
+                start: "2026-11-25 6:05:00 AM +0900",
+                activeDuration: 90,
+                distance: { qty: 200, units: "m" },
+              },
+              {
+                index: 0,
+                start: "2026-11-25 6:00:00 AM +0900",
+                duration: 300,
+                speed: { qty: 1.4, units: "m/s" },
+              },
+              {
+                index: 2,
+                start: "2026-11-25 6:06:30 AM +0900",
+                duration: 120,
+                metrics: { speed: { qty: 1.5, units: "m/s" } },
+                speed: { qty: 9, units: "m/s" },
+              },
+            ],
+          },
+        ],
+      },
+    };
+    const ivs = parse(json).workouts[0]!.intervals!;
+    expect(ivs.map((i) => [i.kind, i.avgSpeedKmh])).toEqual([
+      ["warmup", 5],
+      ["run", 8],
+      ["cooldown", 5.4],
+    ]);
+  });
+});

@@ -22,185 +22,224 @@
         "heartRateData": [],
         "activities": [
           {
+            "activityType": "running",
+            "index": 0,
             "start": "2026-11-21 6:05:47 AM +0900",
             "end": "2026-11-21 6:10:47 AM +0900",
             "duration": 300,
-            "activityType": "running",
-            "distance": {
-              "qty": 0.42,
-              "units": "km"
-            },
-            "speed": {
-              "qty": 1.4,
-              "units": "m/s"
+            "metrics": {
+              "speed": {
+                "qty": 1.4,
+                "units": "m/s"
+              },
+              "distance": {
+                "qty": 420.0,
+                "units": "m"
+              }
             }
           },
           {
+            "activityType": "running",
+            "index": 1,
             "start": "2026-11-21 6:10:47 AM +0900",
             "end": "2026-11-21 6:12:47 AM +0900",
             "duration": 120,
-            "activityType": "running",
-            "distance": {
-              "qty": 0.27,
-              "units": "km"
-            },
-            "speed": {
-              "qty": 2.25,
-              "units": "m/s"
+            "metrics": {
+              "speed": {
+                "qty": 2.25,
+                "units": "m/s"
+              },
+              "distance": {
+                "qty": 270.0,
+                "units": "m"
+              }
             }
           },
           {
+            "activityType": "running",
+            "index": 2,
             "start": "2026-11-21 6:12:47 AM +0900",
             "end": "2026-11-21 6:14:17 AM +0900",
             "duration": 90,
-            "activityType": "running",
-            "distance": {
-              "qty": 0.135,
-              "units": "km"
-            },
-            "speed": {
-              "qty": 1.5,
-              "units": "m/s"
+            "metrics": {
+              "speed": {
+                "qty": 1.5,
+                "units": "m/s"
+              },
+              "distance": {
+                "qty": 135.0,
+                "units": "m"
+              }
             }
           },
           {
+            "activityType": "running",
+            "index": 3,
             "start": "2026-11-21 6:14:17 AM +0900",
             "end": "2026-11-21 6:16:17 AM +0900",
             "duration": 120,
-            "activityType": "running",
-            "distance": {
-              "qty": 0.27,
-              "units": "km"
-            },
-            "speed": {
-              "qty": 2.25,
-              "units": "m/s"
+            "metrics": {
+              "speed": {
+                "qty": 2.25,
+                "units": "m/s"
+              },
+              "distance": {
+                "qty": 270.0,
+                "units": "m"
+              }
             }
           },
           {
+            "activityType": "running",
+            "index": 4,
             "start": "2026-11-21 6:16:17 AM +0900",
             "end": "2026-11-21 6:17:47 AM +0900",
             "duration": 90,
-            "activityType": "running",
-            "distance": {
-              "qty": 0.135,
-              "units": "km"
-            },
-            "speed": {
-              "qty": 1.5,
-              "units": "m/s"
+            "metrics": {
+              "speed": {
+                "qty": 1.5,
+                "units": "m/s"
+              },
+              "distance": {
+                "qty": 135.0,
+                "units": "m"
+              }
             }
           },
           {
+            "activityType": "running",
+            "index": 5,
             "start": "2026-11-21 6:17:47 AM +0900",
             "end": "2026-11-21 6:19:47 AM +0900",
             "duration": 120,
-            "activityType": "running",
-            "distance": {
-              "qty": 0.27,
-              "units": "km"
-            },
-            "speed": {
-              "qty": 2.25,
-              "units": "m/s"
+            "metrics": {
+              "speed": {
+                "qty": 2.25,
+                "units": "m/s"
+              },
+              "distance": {
+                "qty": 270.0,
+                "units": "m"
+              }
             }
           },
           {
+            "activityType": "running",
+            "index": 6,
             "start": "2026-11-21 6:19:47 AM +0900",
             "end": "2026-11-21 6:21:17 AM +0900",
             "duration": 90,
-            "activityType": "running",
-            "distance": {
-              "qty": 0.135,
-              "units": "km"
-            },
-            "speed": {
-              "qty": 1.5,
-              "units": "m/s"
+            "metrics": {
+              "speed": {
+                "qty": 1.5,
+                "units": "m/s"
+              },
+              "distance": {
+                "qty": 135.0,
+                "units": "m"
+              }
             }
           },
           {
+            "activityType": "running",
+            "index": 7,
             "start": "2026-11-21 6:21:17 AM +0900",
             "end": "2026-11-21 6:23:17 AM +0900",
             "duration": 120,
-            "activityType": "running",
-            "distance": {
-              "qty": 0.27,
-              "units": "km"
-            },
-            "speed": {
-              "qty": 2.25,
-              "units": "m/s"
+            "metrics": {
+              "speed": {
+                "qty": 2.25,
+                "units": "m/s"
+              },
+              "distance": {
+                "qty": 270.0,
+                "units": "m"
+              }
             }
           },
           {
+            "activityType": "running",
+            "index": 8,
             "start": "2026-11-21 6:23:17 AM +0900",
             "end": "2026-11-21 6:24:47 AM +0900",
             "duration": 90,
-            "activityType": "running",
-            "distance": {
-              "qty": 0.135,
-              "units": "km"
-            },
-            "speed": {
-              "qty": 1.5,
-              "units": "m/s"
+            "metrics": {
+              "speed": {
+                "qty": 1.5,
+                "units": "m/s"
+              },
+              "distance": {
+                "qty": 135.0,
+                "units": "m"
+              }
             }
           },
           {
+            "activityType": "running",
+            "index": 9,
             "start": "2026-11-21 6:24:47 AM +0900",
             "end": "2026-11-21 6:26:47 AM +0900",
             "duration": 120,
-            "activityType": "running",
-            "distance": {
-              "qty": 0.27,
-              "units": "km"
-            },
-            "speed": {
-              "qty": 2.25,
-              "units": "m/s"
+            "metrics": {
+              "speed": {
+                "qty": 2.25,
+                "units": "m/s"
+              },
+              "distance": {
+                "qty": 270.0,
+                "units": "m"
+              }
             }
           },
           {
+            "activityType": "running",
+            "index": 10,
             "start": "2026-11-21 6:26:47 AM +0900",
             "end": "2026-11-21 6:28:17 AM +0900",
             "duration": 90,
-            "activityType": "running",
-            "distance": {
-              "qty": 0.135,
-              "units": "km"
-            },
-            "speed": {
-              "qty": 1.5,
-              "units": "m/s"
+            "metrics": {
+              "speed": {
+                "qty": 1.5,
+                "units": "m/s"
+              },
+              "distance": {
+                "qty": 135.0,
+                "units": "m"
+              }
             }
           },
           {
+            "activityType": "running",
+            "index": 11,
             "start": "2026-11-21 6:28:17 AM +0900",
             "end": "2026-11-21 6:30:17 AM +0900",
             "duration": 120,
-            "activityType": "running",
-            "distance": {
-              "qty": 0.27,
-              "units": "km"
-            },
-            "speed": {
-              "qty": 2.25,
-              "units": "m/s"
+            "metrics": {
+              "speed": {
+                "qty": 2.25,
+                "units": "m/s"
+              },
+              "distance": {
+                "qty": 270.0,
+                "units": "m"
+              }
             }
           },
           {
+            "activityType": "running",
+            "index": 12,
             "start": "2026-11-21 6:30:17 AM +0900",
             "end": "2026-11-21 6:35:17 AM +0900",
             "duration": 300,
-            "activityType": "running",
-            "distance": {
-              "qty": 0.39,
-              "units": "km"
-            },
-            "speed": {
-              "qty": 1.3,
-              "units": "m/s"
+            "metrics": {
+              "speed": {
+                "qty": 1.3,
+                "units": "m/s"
+              },
+              "distance": {
+                "qty": 390.0,
+                "units": "m"
+              }
             }
           }
         ]

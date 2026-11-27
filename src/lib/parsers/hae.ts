@@ -46,16 +46,25 @@ const minuteSample = z
   })
   .passthrough();
 
+/** Per-interval values. Real HAE exports nest them under `metrics`; older/other shapes put them top-level. */
+const intervalValues = {
+  distance: qtyLike,
+  speed: qtyLike,
+  heartRateAverage: qtyLike,
+  heartRateMaximum: qtyLike,
+  activeDuration: qtyLike,
+  elapsedDuration: qtyLike,
+};
+
 const activitySchema = z
   .object({
+    index: z.number().nullish(),
     start: z.string().nullish(),
     end: z.string().nullish(),
     duration: z.number().nullish(),
-    distance: qtyLike,
-    speed: qtyLike,
     activityType: z.string().nullish(),
-    heartRateAverage: qtyLike,
-    heartRateMaximum: qtyLike,
+    ...intervalValues,
+    metrics: z.object(intervalValues).passthrough().nullish(),
   })
   .passthrough();
 
@@ -199,14 +208,25 @@ export function workoutType(name: string | null | undefined): NormalizedWorkout[
   return "other";
 }
 
-function distanceMeters(v: Qty): number | null {
+/** Workout totals default to km when units are missing; interval values default to m. */
+function distanceMeters(v: Qty, defaultUnit: "km" | "m" = "km"): number | null {
   const d = qty(v);
   if (d == null) return null;
-  const u = (unitsOf(v) ?? "km").toLowerCase();
+  const u = (unitsOf(v) ?? defaultUnit).toLowerCase();
   if (u === "m") return d;
   if (u === "mi") return d * 1609.344;
   if (u === "yd") return d * 0.9144;
   return d * 1000; // km
+}
+
+/** Durations are seconds unless units say minutes/hours. */
+function seconds(v: Qty): number | null {
+  const n = qty(v);
+  if (n == null) return null;
+  const u = (unitsOf(v) ?? "s").toLowerCase();
+  if (u.startsWith("min")) return n * 60;
+  if (u === "h" || u.startsWith("hr") || u.startsWith("hour")) return n * 3600;
+  return n;
 }
 
 /** HAE interval speed is m/s unless units say otherwise. */
@@ -290,9 +310,12 @@ export function parseHaeWorkouts(
             : null;
       const distanceM = distanceMeters(w.distance);
 
-      const acts = w.activities ?? w.intervals ?? [];
+      const acts = [...(w.activities ?? w.intervals ?? [])];
+      if (acts.every((a) => a.index != null)) acts.sort((a, b) => a.index! - b.index!);
       let cursor = start.getTime();
       const rawIntervals = acts.map((a) => {
+        // a.metrics.* first (real exports), then top-level fields.
+        const v = <K extends keyof typeof intervalValues>(k: K): Qty => a.metrics?.[k] ?? a[k];
         const aStart = a.start ? parseDateTime(a.start, timeZone).instant.getTime() : cursor;
         const aEnd = a.end
           ? parseDateTime(a.end, timeZone).instant.getTime()
@@ -300,9 +323,13 @@ export function parseHaeWorkouts(
             ? aStart + a.duration * 1000
             : aStart;
         cursor = aEnd;
-        const dist = distanceMeters(a.distance);
-        const dur = a.duration ?? (aEnd - aStart) / 1000;
-        let spd = speedKmh(a.speed);
+        const dist = distanceMeters(v("distance"), "m");
+        const dur =
+          a.duration ??
+          seconds(v("activeDuration")) ??
+          seconds(v("elapsedDuration")) ??
+          (aEnd - aStart) / 1000;
+        let spd = speedKmh(v("speed"));
         if (spd == null && dist != null && dur > 0) spd = (dist / dur) * 3.6;
         const hrIn = inWindow(hr, aStart, aEnd);
         const stepIn = inWindow(steps, aStart, aEnd)
@@ -315,8 +342,8 @@ export function parseHaeWorkouts(
           durationS: Math.round(dur),
           distanceM: dist != null ? Math.round(dist * 10) / 10 : null,
           avgSpeedKmh: spd != null ? r1(spd) : null,
-          avgHr: qty(a.heartRateAverage) ?? (hrAvgs.length ? Math.round(mean(hrAvgs)!) : null),
-          maxHr: qty(a.heartRateMaximum) ?? (hrMaxes.length ? Math.max(...hrMaxes) : null),
+          avgHr: qty(v("heartRateAverage")) ?? (hrAvgs.length ? Math.round(mean(hrAvgs)!) : null),
+          maxHr: qty(v("heartRateMaximum")) ?? (hrMaxes.length ? Math.max(...hrMaxes) : null),
           cadence: stepIn.length ? Math.round(mean(stepIn)!) : null,
         };
       });
