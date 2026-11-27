@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
+import { computeState } from "@/lib/engine";
 import { analyzeRun, collectRuns, planProgress } from "@/lib/engine/runs";
-import { config, feedback, runWorkout, TZ, tokyo } from "../../helpers/engine";
+import { config, emptyStore, feedback, runWorkout, TZ, tokyo } from "../../helpers/engine";
 
 const cfg = config();
 const now = tokyo("2026-12-31", "20:00");
@@ -153,5 +154,21 @@ describe("run analysis", () => {
   it("reports cadence against the band", () => {
     const ins = analyze([{ kind: "run", avgSpeedKmh: 8, maxHr: 140, cadence: 158 }]);
     expect(ins.find((i) => i.id.endsWith("cadence"))?.text).toMatch(/158 steps\/min/);
+  });
+});
+
+describe("runs before planStart", () => {
+  it("are listed with planWeek 0 and don't count towards the plan", () => {
+    const cfg = config({ planStart: "2026-11-20" });
+    const store = emptyStore({
+      workouts: [runWorkout("2026-11-10", { id: "old" }), runWorkout("2026-11-21", { id: "new" })],
+    });
+    const s = computeState(store, cfg, tokyo("2026-11-22", "12:00"));
+    expect(s.runs.map((r) => [r.id, r.planWeek])).toEqual([
+      ["old", 0],
+      ["new", 1],
+    ]);
+    expect(s.plan.runsThisWeek).toBe(1);
+    expect(s.runs[0]!.insights).toEqual([]);
   });
 });

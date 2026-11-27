@@ -90,6 +90,7 @@ All rules use the **last session containing the exercise**, and only its **worki
 - Flags apply only to groups trained by the plan's routines, and only for the **last complete** week:
   - under 10 sets → info
   - over 22 sets → warn
+- Runs before `planStart` are still listed (planWeek 0, "Before plan") but never count towards the plan or get target insights.
 - The flagged groups are combined into one insight per direction ("Low weekly volume: back 8, chest 8"), so a light template doesn't flood Today.
 
 ## Differences from `reference/engine.js`
