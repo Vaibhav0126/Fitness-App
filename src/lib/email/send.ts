@@ -1,3 +1,5 @@
+import { appendFile, mkdir } from "node:fs/promises";
+import path from "node:path";
 import { Resend } from "resend";
 import { env } from "../env";
 
@@ -21,6 +23,12 @@ export async function sendEmail(msg: EmailMessage): Promise<void> {
       throw new Error("RESEND_API_KEY is required in production (or set ALLOW_CONSOLE_EMAIL=true locally)");
     }
     console.info(`[email:dev] to=${msg.to} subject="${msg.subject}"\n${msg.text}`);
+    // E2E tests read verification links from here. Never set in a real deployment.
+    const outbox = process.env.EMAIL_OUTBOX_DIR;
+    if (outbox) {
+      await mkdir(outbox, { recursive: true });
+      await appendFile(path.join(outbox, "outbox.jsonl"), JSON.stringify(msg) + "\n");
+    }
     return;
   }
   client ??= new Resend(RESEND_API_KEY);
