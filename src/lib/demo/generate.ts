@@ -167,6 +167,7 @@ export function generateDemoData(now: Date): DemoData {
     return st;
   };
 
+  const missedDay = addDays(firstMonday, 7 * 3 + 3); // a Thursday (Lower B) eight weeks ago
   for (
     let d = firstMonday;
     d < today || (d === today && now.getTime() > at(today, 8, 15).getTime());
@@ -175,7 +176,7 @@ export function generateDemoData(now: Date): DemoData {
     const day = config.schedule[String(weekday(d)) as keyof PlanConfig["schedule"]];
     const onTrip = d >= tripFrom && d <= tripTo;
     if (day.kind !== "strength" && day.kind !== "strength+run") continue;
-    if (r.next() < 0.06 && !onTrip) continue; // an occasional missed session
+    if (d === missedDay) continue; // one missed session, so the history isn't perfect
     const items = onTrip ? config.hotelRoutine : (config.routines[day.routine ?? ""] ?? []);
     const title = onTrip ? "Hotel routine" : (day.routine ?? "Strength");
     const start = at(d, 7, r.int(0, 20));
