@@ -36,7 +36,9 @@ describe("weekly volume", () => {
       ...sessionSets("2026-11-17", "Bench Press (Barbell)", [[80, 5]]),
     ];
     const s = computeState(emptyStore({ sets, exercises }), config(), tokyo("2026-11-27"));
-    expect(s.volumeInsights.map((i) => i.id)).toEqual(["volume.chest.low", "volume.quads.high"]);
+    expect(s.volumeInsights.map((i) => i.id)).toEqual(["volume.high", "volume.low"]);
+    expect(s.volumeInsights[0]?.text).toMatch(/quads 23/);
+    expect(s.volumeInsights[1]?.text).toMatch(/chest 1/);
   });
 
   it("never flags the current partial week", () => {
