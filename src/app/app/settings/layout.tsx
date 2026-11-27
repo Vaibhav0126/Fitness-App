@@ -3,6 +3,7 @@ import Link from "next/link";
 const tabs = [
   { href: "/app/settings", label: "Profile" },
   { href: "/app/settings/plan", label: "Plan" },
+  { href: "/app/settings/connections", label: "Connections" },
   { href: "/app/settings/data", label: "Data" },
 ] as const;
 
