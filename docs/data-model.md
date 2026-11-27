@@ -12,18 +12,18 @@ GitHub OAuth tokens in `account` are encrypted by Better Auth (`encryptOAuthToke
 
 Every app table has a `user_id` foreign key with `ON DELETE CASCADE`, so deleting a user removes all of their data.
 
-| Table              | Key / uniqueness                                                                 | Notes                                                                                                              |
-| ------------------ | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| `user_settings`    | PK `user_id`                                                                     | `time_zone` (IANA), `units`, `config` JSONB (validated by Zod `PlanConfig`), `data_version` (bumped on import)     |
-| `upload_token`     | `token_hash` unique                                                              | SHA-256 of a 32-byte random token, plus `last_four`. Revocable.                                                    |
-| `connection`       | unique (`user_id`, `provider`)                                                   | `*_enc` columns hold AES-256-GCM ciphertext, `keyId:iv:tag:data`                                                   |
-| `daily_metric`     | PK (`user_id`, `date`, `name`, `source`)                                         | `value double precision`. One row per source; reads pick one per day by source priority.                           |
-| `workout`          | unique (`user_id`, `source`, `external_id`)                                      | Index (`user_id`, `start`). `raw` is small and optional.                                                           |
-| `workout_interval` | PK (`workout_id`, `idx`)                                                         | Cascades from `workout`. Scoped through its workout.                                                               |
-| `strength_set`     | unique (`user_id`, `source`, `external_id`)                                      | `performed_at` = session start (the grouping key). CSV `external_id` = `${sessionStart}\|${exercise}\|${setIndex}` |
-| `run_feedback`     | unique (`user_id`, `workout_id`), or (`user_id`, `date`) when there's no workout | Shin, calf and effort, each 0–10                                                                                   |
-| `exercise_alias`   | unique (`user_id`, `raw_key`) NULLS NOT DISTINCT                                 | `user_id` null = global seed. Per-user rows override it.                                                           |
-| `import_job`       | index (`user_id`, `started_at`)                                                  | Status and counts for the Imports page                                                                             |
+| Table              | Key / uniqueness                                                                 | Notes                                                                                                                                                                   |
+| ------------------ | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `user_settings`    | PK `user_id`                                                                     | `time_zone` (IANA), `units`, `config` JSONB (validated by Zod `PlanConfig`), `data_version` (bumped on every write; part of the cache key, ADR 0005), `onboarding_done` |
+| `upload_token`     | `token_hash` unique                                                              | SHA-256 of a 32-byte random token, plus `last_four`. Revocable.                                                                                                         |
+| `connection`       | unique (`user_id`, `provider`)                                                   | `*_enc` columns hold AES-256-GCM ciphertext, `keyId:iv:tag:data`                                                                                                        |
+| `daily_metric`     | PK (`user_id`, `date`, `name`, `source`)                                         | `value double precision`. One row per source; reads pick one per day by source priority.                                                                                |
+| `workout`          | unique (`user_id`, `source`, `external_id`)                                      | Index (`user_id`, `start`). `raw` is small and optional.                                                                                                                |
+| `workout_interval` | PK (`workout_id`, `idx`)                                                         | Cascades from `workout`. Scoped through its workout.                                                                                                                    |
+| `strength_set`     | unique (`user_id`, `source`, `external_id`)                                      | `performed_at` = session start (the grouping key). CSV `external_id` = `${sessionStart}\|${exercise}\|${setIndex}`                                                      |
+| `run_feedback`     | unique (`user_id`, `workout_id`), or (`user_id`, `date`) when there's no workout | Shin, calf and effort, each 0–10                                                                                                                                        |
+| `exercise_alias`   | unique (`user_id`, `raw_key`) NULLS NOT DISTINCT                                 | `user_id` null = global seed. Per-user rows override it.                                                                                                                |
+| `import_job`       | index (`user_id`, `started_at`)                                                  | Status and JSONB counts (`setsInserted`, `metricsUnchanged`, …) summed across chunks; shown as import history                                                           |
 
 ### Source priority for daily metrics
 
@@ -46,3 +46,11 @@ All reads and writes of owned tables go through `scoped(userId)` (`src/lib/db/sc
 ## Storage budget
 
 Neon Free gives 1 GB per project. Only summaries are stored (daily rows, workout summaries, sets), never raw files. An admin page (Phase 1b) reports `pg_database_size()` and warns above 80%.
+
+## Import merge rules (Phase 1b)
+
+- Natural keys: `daily_metric` (user, date, name, source); `workout` and `strength_set` (user, source, external_id); `workout_interval` (workout, idx).
+- Upserts use `ON CONFLICT DO UPDATE SET col = COALESCE(excluded.col, col) WHERE <any column IS DISTINCT FROM>`: a null in a later import never overwrites a stored value, and identical rows are left untouched (reported as "unchanged"). `RETURNING (xmax = 0)` distinguishes inserts from updates.
+- `strength_set.exercise` is re-resolved through `exercise_alias` on every import (user aliases override global ones); unknown names are kept as typed and reported.
+- Each strength session (sets sharing a start time) also creates a `workout` row of type `strength` (`external_id = session|<start>`), linked from its sets.
+- Strength CSV external ids: `<session start ISO>|<alias key of exercise>|<set index>`; Strong uses the row order within the exercise because its "Set Order" can be a letter.
