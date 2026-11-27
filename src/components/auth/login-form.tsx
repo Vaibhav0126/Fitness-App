@@ -1,4 +1,5 @@
 "use client";
+import { useHydrated } from "./use-hydrated";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -11,9 +12,11 @@ export function LoginForm({ next }: { next: string }) {
   const [error, setError] = useState<string | null>(null);
   const [unverified, setUnverified] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+  const hydrated = useHydrated();
 
   return (
     <form
+      method="post"
       className="grid gap-4"
       onSubmit={async (e) => {
         e.preventDefault();
@@ -46,7 +49,7 @@ export function LoginForm({ next }: { next: string }) {
           Didn&apos;t get it? Resend the verification email
         </Link>
       ) : null}
-      <Button type="submit" disabled={pending}>
+      <Button type="submit" disabled={pending || !hydrated}>
         {pending ? "Logging in…" : "Log in"}
       </Button>
       <Link href="/reset-password" className="text-sm text-muted-foreground underline">
