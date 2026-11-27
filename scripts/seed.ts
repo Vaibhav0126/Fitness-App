@@ -4,6 +4,7 @@
  * The default plan template ("Upper/Lower 4-day + 8-week run-walk") lives in code:
  * src/lib/engine/config.ts → defaultPlanConfig().
  */
+import "./load-env";
 import { closeDb, getDb } from "../src/lib/db/client";
 import { seedAliases } from "../src/server/seed/aliases";
 import { regenerateDemo } from "../src/server/seed/demo";
