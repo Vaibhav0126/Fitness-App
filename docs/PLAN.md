@@ -128,7 +128,7 @@ Smaller items:
 ## 4. Phase plan
 
 - **1a:** pnpm scaffold, strict TS, ESLint/Prettier, Tailwind and shadcn, Drizzle schema and migrations, `pg` client, Better Auth (email/password, verification, reset via Resend, GitHub OAuth, linking by verified email), `scoped()` helper and isolation test, engine ported test-first (a reference-parity suite plus tests for each R5 difference), CI.
-- **1b:** settings and plan editor (form plus JSON view), CSV import (Hevy and Strong presets, mapping, 20-row preview, chunked batch), manual logger, Today/Next/Strength/Runs/Recovery pages, seed and demo.
+- **1b:** settings and plan editor (form plus JSON view), CSV import (Hevy and Strong presets, mapping, 20-row preview, chunked batch), manual logger, Today/Next/Strength/Runs/Recovery pages, seed and demo. `loadEngineStore` is limited to the last 365 days (or cached per user) (PR #1 review).
 - **2:** tokens and Shortcut endpoint with docs, HAE parser and endpoint with interval charts, Hevy key and sync, cron, then Strava (feature-flagged, per R3).
 - **3:** Apple Health worker import (progress, cancel, dedupe), GPX/FIT/TCX.
 - **4:** landing page, README and diagrams, PWA, accessibility, Lighthouse, Playwright, privacy page, export and delete.
