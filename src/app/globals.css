@@ -21,6 +21,11 @@
   --warn: oklch(0.55 0.15 60);
   --danger: oklch(0.52 0.19 25);
   --radius: 0.75rem;
+  /* chart roles (dataviz reference palette, slots 1–2) */
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --chart-band: oklch(0.5 0.13 150 / 0.12);
+  --chart-grid: oklch(0.9 0.008 260);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -39,6 +44,10 @@
     --good: oklch(0.75 0.14 150);
     --warn: oklch(0.8 0.14 75);
     --danger: oklch(0.72 0.17 25);
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --chart-band: oklch(0.75 0.14 150 / 0.14);
+    --chart-grid: oklch(0.3 0.012 260);
   }
 }
 
@@ -57,6 +66,10 @@
   --good: oklch(0.75 0.14 150);
   --warn: oklch(0.8 0.14 75);
   --danger: oklch(0.72 0.17 25);
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --chart-band: oklch(0.75 0.14 150 / 0.14);
+  --chart-grid: oklch(0.3 0.012 260);
 }
 
 @theme inline {
@@ -76,6 +89,8 @@
   --color-good: var(--good);
   --color-warn: var(--warn);
   --color-danger: var(--danger);
+  --color-series-1: var(--series-1);
+  --color-series-2: var(--series-2);
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
