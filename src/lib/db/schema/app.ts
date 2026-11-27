@@ -245,3 +245,13 @@ export const importJob = pgTable(
   },
   (t) => [index().on(t.userId, t.startedAt)],
 );
+
+/**
+ * Fixed-window counters for the public ingest endpoints (spec §8: Postgres-backed limiter).
+ * Not user-owned: keys are e.g. `shortcut:token:<tokenId>` or `ingest-auth:ip:<ip>`.
+ */
+export const ingestRateLimit = pgTable("ingest_rate_limit", {
+  key: text().primaryKey(),
+  windowStart: timestamp({ withTimezone: true }).notNull(),
+  count: integer().notNull(),
+});
