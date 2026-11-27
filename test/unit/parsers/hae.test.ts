@@ -123,7 +123,9 @@ describe("real HAE shape: interval values under activities[i].metrics", () => {
     const runs = ivs.filter((i) => i.kind === "run");
     expect(runs).toHaveLength(8);
     expect(runs.every((r) => r.durationS === 90)).toBe(true);
+    // Real exports carry fractional HR (137.6153846 bpm); intervals store whole beats.
     expect(runs[0]).toMatchObject({ avgSpeedKmh: 7.9, distanceM: 198, avgHr: 138, maxHr: 146 });
+    expect(ivs.every((i) => i.avgHr == null || Number.isInteger(i.avgHr))).toBe(true);
     expect(
       ivs.filter((i) => i.kind === "walk").every((i) => i.durationS === 120 && i.avgSpeedKmh === 5.4),
     ).toBe(true);
