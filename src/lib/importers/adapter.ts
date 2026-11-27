@@ -71,6 +71,8 @@ export interface NormalizedSet {
   externalId: string;
   sessionTitle?: string | null;
   performedAt: string;
+  /** Session end (ISO), when the source has it; used for the session's workout row. */
+  sessionEnd?: string | null;
   exerciseRaw: string;
   setIndex: number;
   setType?: string | null;
