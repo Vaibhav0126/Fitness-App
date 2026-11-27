@@ -30,3 +30,16 @@ export async function requireWriter(): Promise<SessionUser> {
   if (user.isDemo) throw new DemoReadOnlyError();
   return user;
 }
+
+/**
+ * For Route Handlers: the signed-in, verified, writable user, or an error Response
+ * (401 not signed in, 403 unverified or demo). Never redirects.
+ */
+export async function apiWriter(): Promise<SessionUser | Response> {
+  const session = await getSession();
+  if (!session) return Response.json({ error: "Not signed in" }, { status: 401 });
+  if (!session.user.emailVerified)
+    return Response.json({ error: "Verify your email first" }, { status: 403 });
+  if (session.user.isDemo) return Response.json({ error: new DemoReadOnlyError().message }, { status: 403 });
+  return session.user;
+}
