@@ -28,7 +28,7 @@ const MONTHS: Record<string, number> = {
 /** Replace every Unicode space (U+00A0, U+2000–U+200B, U+202F, U+205F, U+3000) with a plain space. */
 export const normalizeSpaces = (s: string) =>
   s
-    .replace(/[   -​  　]/g, " ")
+    .replace(/[\u00a0\u1680\u2000-\u200b\u202f\u205f\u3000]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 
