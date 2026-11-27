@@ -108,11 +108,11 @@ Every new dependency gets the "maintained and needed" check before I add it (spe
 
 **R8. "Cache computed state per user".** The state depends on `now` (the noon rule, today's date), so a cached result goes stale on its own. → Phase 1 computes on request: the engine is pure and fast, and the cost is the queries, which I'll dedupe with React `cache()`. I'll add a `dashboard_cache` row (keyed by user, local date and data version, bumped on import) only if Lighthouse or profiling shows it's needed. That works the same on any Postgres host.
 
-**R9. Vercel Hobby (verified):** 4.5 MB request body (413 above that), **300 s** max duration with Fluid, cron at most once a day with ±59 min precision. Vercel calls cron jobs "legacy, migrating to Schedules", so I'll check at Phase 2. Hobby is non-commercial only, which is fine for a portfolio project.
+**R9. Vercel Hobby (verified):** 4.5 MB request body (413 above that), **300 s** max duration with Fluid, cron at most once a day with ±59 min precision. Vercel calls cron jobs "legacy, migrating to Schedules", so I'll check at Phase 2. _Phase 2: still supported on all plans via `vercel.json` with `CRON_SECRET`; migration to Schedules is optional for now._ Hobby is non-commercial only, which is fine for a portfolio project.
 
 **R10. Neon Free (verified Nov 2026):** 1 GB storage per project, 100 CU-hours per month, writes fail at the cap. Matches the spec. The admin page warns at 80%. Admin access is set by a new env var, `ADMIN_EMAILS`.
 
-**R11. Hevy API is unverified.** The docs page renders client-side, so I couldn't confirm the endpoints, `pageSize` max, the events response shape or the rate limits. Third-party specs also disagree on the base URL (`api.hevyapp.com` vs `hevy.com/api`). → Verify in Phase 2 against a real Pro key (yours). The client is isolated behind a Zod-validated interface.
+**R11. Hevy API is unverified.** _Resolved in Phase 2: verified against `developers.hevy.com/openapi.json`, see ADR 0006._ The docs page renders client-side, so I couldn't confirm the endpoints, `pageSize` max, the events response shape or the rate limits. Third-party specs also disagree on the base URL (`api.hevyapp.com` vs `hevy.com/api`). → Verify in Phase 2 against a real Pro key (yours). The client is isolated behind a Zod-validated interface.
 
 **R12. Phase 1 is very large.** → Split it into **1a** (scaffold, DB, auth, engine + tests, CI) and **1b** (settings/plan editor, CSV import, logger, five pages, seed/demo), with a review stop after each.
 
@@ -129,7 +129,7 @@ Smaller items:
 
 - **1a (done, PR #1):** pnpm scaffold, strict TS, ESLint/Prettier, Tailwind and shadcn, Drizzle schema and migrations, `pg` client, Better Auth (email/password, verification, reset via Resend, GitHub OAuth, linking by verified email), `scoped()` helper and isolation test, engine ported test-first (a reference-parity suite plus tests for each R5 difference), CI.
 - **1b (done):** onboarding; settings and plan editor (form plus JSON view); CSV import (Hevy and Strong presets, mapping, 20-row preview, chunked batch) and HAE v2 file upload (parsed in a Web Worker); idempotent merge-upserts with import history; manual logger and run feedback; Today/Next/Strength/Runs/Recovery pages with SVG charts; seed and demo; JSON export and account deletion; a 365-day store window plus a per-user cache (ADR 0005); a Playwright smoke test in CI. Moved forward from later phases: the HAE file parser (2), Playwright and export/delete (4). Deferred: imperial display.
-- **2:** tokens and Shortcut endpoint with docs, HAE push endpoint (`/api/ingest/hae`, reusing the 1b parser and merge), Hevy key and sync, cron, then Strava (feature-flagged, per R3).
+- **2 (done except Strava):** upload tokens; `/api/ingest/shortcut` + `docs/shortcut.md`; `/api/ingest/hae` (1b parser and merge) + `docs/health-auto-export.md`; Hevy key and resumable sync with events and deletes (ADR 0006); daily cron (`vercel.json`) that also refreshes the demo (R7); Postgres limiter. Strava is still to do (feature-flagged, per R3), pending your decision on the subscription requirement.
 - **3:** Apple Health worker import (progress, cancel, dedupe), GPX/FIT/TCX.
 - **4:** landing page, README and diagrams, PWA, accessibility, Lighthouse, more Playwright coverage, privacy page, imperial units display.
 - **5 (optional):** bring-your-own-key AI coach on non-Strava data, weekly digest.

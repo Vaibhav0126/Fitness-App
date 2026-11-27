@@ -48,7 +48,8 @@ test("sign up → verify → onboard → import Hevy CSV → see the next workou
 
   await page.goto("/app/next");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  await expect(page.locator("ol li").first()).toBeVisible();
+  // Strength days list exercises; run days (e.g. after 12:00 on a Friday) show run guidance.
+  await expect(page.getByRole("main").locator("ol li, article").first()).toBeVisible();
 
   await page.goto("/app/strength");
   await expect(page.getByText("Squat (Barbell)").first()).toBeVisible();
@@ -66,6 +67,32 @@ test("sign up → verify → onboard → import Hevy CSV → see the next workou
   await expect(page.getByText("Import complete.")).toBeVisible();
   await page.goto("/app/runs");
   await expect(page.getByText("Recent runs")).toBeVisible();
+
+  // Phase 2 "done when": a Shortcut POST with an upload token updates Today.
+  await page.goto("/app/settings/connections");
+  await page.getByLabel("New token name").fill("iPhone Shortcut");
+  await page.getByRole("button", { name: "Create token" }).click();
+  const token = (await page.locator("code", { hasText: /^trn_/ }).textContent())!.trim();
+  await expect(page.getByText(/won.t be shown again/)).toBeVisible();
+  const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Tokyo" }).format(new Date());
+  const res = await page.request.post("/api/ingest/shortcut", {
+    headers: { authorization: `Bearer ${token}` },
+    data: { v: 1, tz: "Asia/Tokyo", days: [{ date: today, sleepHours: 6.4, hrvSdnnMs: 51, restingHr: 54 }] },
+  });
+  expect(res.status()).toBe(200);
+  expect(await res.json()).toMatchObject({ ok: true, received: 3 });
+  await page.goto("/app");
+  await expect(page.getByText("6.4 h", { exact: true })).toBeVisible();
+  // Revoked tokens stop working immediately.
+  await page.goto("/app/settings/connections");
+  await page.getByRole("button", { name: "Revoke", exact: true }).click();
+  await page.getByRole("button", { name: "Revoke now" }).click();
+  await expect(page.getByText("No tokens yet.")).toBeVisible();
+  const after = await page.request.post("/api/ingest/shortcut", {
+    headers: { authorization: `Bearer ${token}` },
+    data: { v: 1, days: [{ date: today, sleepHours: 6.4 }] },
+  });
+  expect(after.status()).toBe(401);
 });
 
 test("the demo is read-only", async ({ page }) => {
@@ -76,4 +103,6 @@ test("the demo is read-only", async ({ page }) => {
     data: { kind: "metrics", source: "manual", rows: [] },
   });
   expect(res.status()).toBe(403);
+  await page.goto("/app/settings/connections");
+  await expect(page.getByRole("button", { name: "Create token" })).toBeDisabled();
 });

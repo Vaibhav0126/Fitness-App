@@ -224,6 +224,8 @@ export async function mergeSets(
   source: string,
   rows: SetRecord[],
   db: Db = getDb(),
+  /** Authoritative sources (e.g. the Hevy API): incoming values replace stored ones, nulls included. */
+  opts: { overwrite?: boolean } = {},
 ): Promise<MergeCounts & { unknownExercises: string[]; sessions: MergeCounts }> {
   if (!rows.length) return { ...zero(), unknownExercises: [], sessions: zero() };
   const { resolve, known } = await exerciseResolver(userId, db);
@@ -284,7 +286,7 @@ export async function mergeSets(
     };
   });
   // Exercise names re-resolve on every import (alias changes apply); other columns coalesce.
-  const merged = (c: PgColumn) => (c === strengthSet.exercise ? excluded(c) : coalesce(c));
+  const merged = (c: PgColumn) => (opts.overwrite || c === strengthSet.exercise ? excluded(c) : coalesce(c));
   const set = Object.fromEntries(SET_MERGE_COLS.map((c) => [keyOf(strengthSet, c), merged(c)]));
   const returned = await db
     .insert(strengthSet)

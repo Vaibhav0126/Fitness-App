@@ -57,11 +57,11 @@
                 "units": "m"
               },
               "heartRateAverage": {
-                "qty": 138,
+                "qty": 137.6153846,
                 "units": "bpm"
               },
               "heartRateMaximum": {
-                "qty": 146,
+                "qty": 146.4,
                 "units": "bpm"
               }
             }

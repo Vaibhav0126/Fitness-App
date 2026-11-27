@@ -1,0 +1,11 @@
+{
+  "data": {
+    "id": "00000000-0000-4000-8000-0000000000ff",
+    "username": "synthetic_lifter",
+    "name": "Synthetic Lifter",
+    "url": "https://hevy.com/user/synthetic_lifter",
+    "weight_unit": "kg",
+    "distance_unit": "kilometers",
+    "is_pro": true
+  }
+}

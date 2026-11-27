@@ -289,6 +289,8 @@ export function classifyIntervals(
   });
 }
 
+const roundOrNull = (v: number | null | undefined) => (v != null ? Math.round(v) : null);
+
 export function parseHaeWorkouts(
   workouts: z.infer<typeof workoutSchema>[],
   timeZone: string,
@@ -342,8 +344,8 @@ export function parseHaeWorkouts(
           durationS: Math.round(dur),
           distanceM: dist != null ? Math.round(dist * 10) / 10 : null,
           avgSpeedKmh: spd != null ? r1(spd) : null,
-          avgHr: qty(v("heartRateAverage")) ?? (hrAvgs.length ? Math.round(mean(hrAvgs)!) : null),
-          maxHr: qty(v("heartRateMaximum")) ?? (hrMaxes.length ? Math.max(...hrMaxes) : null),
+          avgHr: roundOrNull(qty(v("heartRateAverage")) ?? (hrAvgs.length ? mean(hrAvgs) : null)),
+          maxHr: roundOrNull(qty(v("heartRateMaximum")) ?? (hrMaxes.length ? Math.max(...hrMaxes) : null)),
           cadence: stepIn.length ? Math.round(mean(stepIn)!) : null,
         };
       });
