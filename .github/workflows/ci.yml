@@ -50,3 +50,14 @@ jobs:
         run: pnpm db:generate --name ci-drift-check && git diff --exit-code --stat -- drizzle/ && test -z "$(git status --porcelain drizzle/)"
       - run: pnpm test:integration
       - run: pnpm build
+      - run: pnpm db:seed
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:e2e
+        env:
+          E2E_DATABASE_URL: ${{ env.DATABASE_URL }}
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: playwright-traces
+          path: test-results/
+          retention-days: 7
