@@ -1,0 +1,140 @@
+{
+  "data": {
+    "metrics": [
+      {
+        "name": "heart_rate_variability",
+        "units": "ms",
+        "data": [
+          {
+            "date": "2026-11-20 12:00:00 AM +0900",
+            "qty": 48.2
+          },
+          {
+            "date": "2026-11-21 12:00:00 AM +0900",
+            "qty": 51.0
+          },
+          {
+            "date": "2026-11-22 12:00:00 AM +0900",
+            "qty": 46.4
+          },
+          {
+            "date": "2026-11-23 12:00:00 AM +0900",
+            "qty": 49.9
+          }
+        ]
+      },
+      {
+        "name": "resting_heart_rate",
+        "units": "count/min",
+        "data": [
+          {
+            "date": "2026-11-20 12:00:00 AM +0900",
+            "qty": 56
+          },
+          {
+            "date": "2026-11-21 12:00:00 AM +0900",
+            "qty": 55
+          },
+          {
+            "date": "2026-11-22 12:00:00 AM +0900",
+            "qty": 57
+          },
+          {
+            "date": "2026-11-23 12:00:00 AM +0900",
+            "qty": 55
+          }
+        ]
+      },
+      {
+        "name": "step_count",
+        "units": "count",
+        "data": [
+          {
+            "date": "2026-11-23 9:00:00 AM +0900",
+            "qty": 4000
+          },
+          {
+            "date": "2026-11-23 6:30:00 PM +0900",
+            "qty": 6432
+          }
+        ]
+      },
+      {
+        "name": "sleep_analysis",
+        "units": "hr",
+        "data": [
+          {
+            "date": "2026-11-22 12:00:00 AM +0900",
+            "totalSleep": 7.2,
+            "sleepStart": "2026-11-22 11:10:00 PM +0900",
+            "sleepEnd": "2026-11-23 6:35:00 AM +0900",
+            "core": 4,
+            "deep": 1.2,
+            "rem": 2,
+            "asleep": 0
+          },
+          {
+            "date": "2026-11-21 12:00:00 AM +0900",
+            "asleep": 0,
+            "core": 3.5,
+            "deep": 1.0,
+            "rem": 1.5,
+            "sleepEnd": "2026-11-22 6:00:00 AM +0900"
+          }
+        ]
+      },
+      {
+        "name": "weight_body_mass",
+        "units": "lb",
+        "data": [
+          {
+            "date": "2026-11-23 7:00:00 AM +0900",
+            "qty": 176.6
+          }
+        ]
+      },
+      {
+        "name": "active_energy",
+        "units": "kJ",
+        "data": [
+          {
+            "date": "2026-11-23 12:00:00 AM +0900",
+            "qty": 2678
+          }
+        ]
+      },
+      {
+        "name": "vo2_max",
+        "units": "ml/(kg·min)",
+        "data": [
+          {
+            "date": "2026-11-23 12:00:00 AM +0900",
+            "qty": 44.1
+          }
+        ]
+      },
+      {
+        "name": "walking_heart_rate_average",
+        "units": "count/min",
+        "data": [
+          {
+            "date": "2026-11-23 12:00:00 AM +0900",
+            "Avg": 101,
+            "Min": 90,
+            "Max": 112
+          }
+        ]
+      },
+      {
+        "name": "blood_oxygen_saturation",
+        "units": "%",
+        "data": [
+          {
+            "date": "2026-11-23 12:00:00 AM +0900",
+            "qty": 97
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,602 @@
+{
+  "data": {
+    "workouts": [
+      {
+        "id": "6C1B2A90-RUNWALK-0001",
+        "name": "Outdoor Run",
+        "start": "2026-11-21 6:05:47 AM +0900",
+        "end": "2026-11-21 6:35:17 AM +0900",
+        "duration": 1770,
+        "distance": {
+          "qty": 3.105,
+          "units": "km"
+        },
+        "activeEnergyBurned": {
+          "qty": 310,
+          "units": "kcal"
+        },
+        "heartRate": {
+          "avg": {
+            "qty": 134,
+            "units": "bpm"
+          },
+          "max": {
+            "qty": 152,
+            "units": "bpm"
+          },
+          "min": {
+            "qty": 98,
+            "units": "bpm"
+          }
+        },
+        "heartRateData": [
+          {
+            "date": "2026-11-21 6:05:47 AM +0900",
+            "Avg": 118,
+            "Max": 125,
+            "Min": 110,
+            "units": "count/min"
+          },
+          {
+            "date": "2026-11-21 6:06:47 AM +0900",
+            "Avg": 118,
+            "Max": 125,
+            "Min": 110,
+            "units": "count/min"
+          },
+          {
+            "date": "2026-11-21 6:07:47 AM +0900",
+            "Avg": 118,
+            "Max": 125,
+            "Min": 110,
+            "units": "count/min"
+          },
+          {
+            "date": "2026-11-21 6:08:47 AM +0900",
+            "Avg": 118,
+            "Max": 125,
+            "Min": 110,
+            "units": "count/min"
+          },
+          {
+            "date": "2026-11-21 6:09:47 AM +0900",
+            "Avg": 118,
+            "Max": 125,
+            "Min": 110,
+            "units": "count/min"
+          },
+          {
+            "date": "2026-11-21 6:10:47 AM +0900",
+            "Avg": 145,
+            "Max": 151,
+            "Min": 110,
+            "units": "count/min"
+          },
+          {
+            "date": "2026-11-21 6:11:47 AM +0900",
+            "Avg": 145,
+            "Max": 151,
+            "Min": 110,
+            "units": "count/min"
+          },
+          {
+            "date": "2026-11-21 6:12:47 AM +0900",
+            "Avg": 118,
+            "Max": 125,
+            "Min": 110,
+            "units": "count/min"
+          },
+          {
+            "date": "2026-11-21 6:13:47 AM +0900",
+            "Avg": 118,
+            "Max": 125,
+            "Min": 110,
+            "units": "count/min"
+          },
+          {
+            "date": "2026-11-21 6:14:47 AM +0900",
+            "Avg": 145,
+            "Max": 151,
+            "Min": 110,
+            "units": "count/min"
+          },
+          {
+            "date": "2026-11-21 6:15:47 AM +0900",
+            "Avg": 145,
+            "Max": 151,
+            "Min": 110,
+            "units": "count/min"
+          },
+          {
+            "date": "2026-11-21 6:16:47 AM +0900",
+            "Avg": 118,
+            "Max": 125,
+            "Min": 110,
+            "units": "count/min"
+          },
+          {
+            "date": "2026-11-21 6:17:47 AM +0900",
+            "Avg": 145,
+            "Max": 151,
+            "Min": 110,
+            "units": "count/min"
+          },
+          {
+            "date": "2026-11-21 6:18:47 AM +0900",
+            "Avg": 145,
+            "Max": 151,
+            "Min": 110,
+            "units": "count/min"
+          },
+          {
+            "date": "2026-11-21 6:19:47 AM +0900",
+            "Avg": 118,
+            "Max": 125,
+            "Min": 110,
+            "units": "count/min"
+          },
+          {
+            "date": "2026-11-21 6:20:47 AM +0900",
+            "Avg": 118,
+            "Max": 125,
+            "Min": 110,
+            "units": "count/min"
+          },
+          {
+            "date": "2026-11-21 6:21:47 AM +0900",
+            "Avg": 145,
+            "Max": 151,
+            "Min": 110,
+            "units": "count/min"
+          },
+          {
+            "date": "2026-11-21 6:22:47 AM +0900",
+            "Avg": 145,
+            "Max": 151,
+            "Min": 110,
+            "units": "count/min"
+          },
+          {
+            "date": "2026-11-21 6:23:47 AM +0900",
+            "Avg": 118,
+            "Max": 125,
+            "Min": 110,
+            "units": "count/min"
+          },
+          {
+            "date": "2026-11-21 6:24:47 AM +0900",
+            "Avg": 145,
+            "Max": 151,
+            "Min": 110,
+            "units": "count/min"
+          },
+          {
+            "date": "2026-11-21 6:25:47 AM +0900",
+            "Avg": 145,
+            "Max": 151,
+            "Min": 110,
+            "units": "count/min"
+          },
+          {
+            "date": "2026-11-21 6:26:47 AM +0900",
+            "Avg": 118,
+            "Max": 125,
+            "Min": 110,
+            "units": "count/min"
+          },
+          {
+            "date": "2026-11-21 6:27:47 AM +0900",
+            "Avg": 118,
+            "Max": 125,
+            "Min": 110,
+            "units": "count/min"
+          },
+          {
+            "date": "2026-11-21 6:28:47 AM +0900",
+            "Avg": 145,
+            "Max": 151,
+            "Min": 110,
+            "units": "count/min"
+          },
+          {
+            "date": "2026-11-21 6:29:47 AM +0900",
+            "Avg": 145,
+            "Max": 151,
+            "Min": 110,
+            "units": "count/min"
+          },
+          {
+            "date": "2026-11-21 6:30:47 AM +0900",
+            "Avg": 118,
+            "Max": 125,
+            "Min": 110,
+            "units": "count/min"
+          },
+          {
+            "date": "2026-11-21 6:31:47 AM +0900",
+            "Avg": 118,
+            "Max": 125,
+            "Min": 110,
+            "units": "count/min"
+          },
+          {
+            "date": "2026-11-21 6:32:47 AM +0900",
+            "Avg": 118,
+            "Max": 125,
+            "Min": 110,
+            "units": "count/min"
+          },
+          {
+            "date": "2026-11-21 6:33:47 AM +0900",
+            "Avg": 118,
+            "Max": 125,
+            "Min": 110,
+            "units": "count/min"
+          },
+          {
+            "date": "2026-11-21 6:34:47 AM +0900",
+            "Avg": 118,
+            "Max": 125,
+            "Min": 110,
+            "units": "count/min"
+          }
+        ],
+        "stepCount": [
+          {
+            "date": "2026-11-21 6:05:47 AM +0900",
+            "qty": 112,
+            "units": "count"
+          },
+          {
+            "date": "2026-11-21 6:06:47 AM +0900",
+            "qty": 112,
+            "units": "count"
+          },
+          {
+            "date": "2026-11-21 6:07:47 AM +0900",
+            "qty": 112,
+            "units": "count"
+          },
+          {
+            "date": "2026-11-21 6:08:47 AM +0900",
+            "qty": 112,
+            "units": "count"
+          },
+          {
+            "date": "2026-11-21 6:09:47 AM +0900",
+            "qty": 112,
+            "units": "count"
+          },
+          {
+            "date": "2026-11-21 6:10:47 AM +0900",
+            "qty": 168,
+            "units": "count"
+          },
+          {
+            "date": "2026-11-21 6:11:47 AM +0900",
+            "qty": 168,
+            "units": "count"
+          },
+          {
+            "date": "2026-11-21 6:12:47 AM +0900",
+            "qty": 112,
+            "units": "count"
+          },
+          {
+            "date": "2026-11-21 6:13:47 AM +0900",
+            "qty": 112,
+            "units": "count"
+          },
+          {
+            "date": "2026-11-21 6:14:47 AM +0900",
+            "qty": 168,
+            "units": "count"
+          },
+          {
+            "date": "2026-11-21 6:15:47 AM +0900",
+            "qty": 168,
+            "units": "count"
+          },
+          {
+            "date": "2026-11-21 6:16:47 AM +0900",
+            "qty": 112,
+            "units": "count"
+          },
+          {
+            "date": "2026-11-21 6:17:47 AM +0900",
+            "qty": 168,
+            "units": "count"
+          },
+          {
+            "date": "2026-11-21 6:18:47 AM +0900",
+            "qty": 168,
+            "units": "count"
+          },
+          {
+            "date": "2026-11-21 6:19:47 AM +0900",
+            "qty": 112,
+            "units": "count"
+          },
+          {
+            "date": "2026-11-21 6:20:47 AM +0900",
+            "qty": 112,
+            "units": "count"
+          },
+          {
+            "date": "2026-11-21 6:21:47 AM +0900",
+            "qty": 168,
+            "units": "count"
+          },
+          {
+            "date": "2026-11-21 6:22:47 AM +0900",
+            "qty": 168,
+            "units": "count"
+          },
+          {
+            "date": "2026-11-21 6:23:47 AM +0900",
+            "qty": 112,
+            "units": "count"
+          },
+          {
+            "date": "2026-11-21 6:24:47 AM +0900",
+            "qty": 168,
+            "units": "count"
+          },
+          {
+            "date": "2026-11-21 6:25:47 AM +0900",
+            "qty": 168,
+            "units": "count"
+          },
+          {
+            "date": "2026-11-21 6:26:47 AM +0900",
+            "qty": 112,
+            "units": "count"
+          },
+          {
+            "date": "2026-11-21 6:27:47 AM +0900",
+            "qty": 112,
+            "units": "count"
+          },
+          {
+            "date": "2026-11-21 6:28:47 AM +0900",
+            "qty": 168,
+            "units": "count"
+          },
+          {
+            "date": "2026-11-21 6:29:47 AM +0900",
+            "qty": 168,
+            "units": "count"
+          },
+          {
+            "date": "2026-11-21 6:30:47 AM +0900",
+            "qty": 112,
+            "units": "count"
+          },
+          {
+            "date": "2026-11-21 6:31:47 AM +0900",
+            "qty": 112,
+            "units": "count"
+          },
+          {
+            "date": "2026-11-21 6:32:47 AM +0900",
+            "qty": 112,
+            "units": "count"
+          },
+          {
+            "date": "2026-11-21 6:33:47 AM +0900",
+            "qty": 112,
+            "units": "count"
+          },
+          {
+            "date": "2026-11-21 6:34:47 AM +0900",
+            "qty": 112,
+            "units": "count"
+          }
+        ],
+        "activities": [
+          {
+            "start": "2026-11-21 6:05:47 AM +0900",
+            "end": "2026-11-21 6:10:47 AM +0900",
+            "duration": 300,
+            "activityType": "running",
+            "distance": {
+              "qty": 0.42,
+              "units": "km"
+            },
+            "speed": {
+              "qty": 1.4,
+              "units": "m/s"
+            }
+          },
+          {
+            "start": "2026-11-21 6:10:47 AM +0900",
+            "end": "2026-11-21 6:12:47 AM +0900",
+            "duration": 120,
+            "activityType": "running",
+            "distance": {
+              "qty": 0.27,
+              "units": "km"
+            },
+            "speed": {
+              "qty": 2.25,
+              "units": "m/s"
+            }
+          },
+          {
+            "start": "2026-11-21 6:12:47 AM +0900",
+            "end": "2026-11-21 6:14:17 AM +0900",
+            "duration": 90,
+            "activityType": "running",
+            "distance": {
+              "qty": 0.135,
+              "units": "km"
+            },
+            "speed": {
+              "qty": 1.5,
+              "units": "m/s"
+            }
+          },
+          {
+            "start": "2026-11-21 6:14:17 AM +0900",
+            "end": "2026-11-21 6:16:17 AM +0900",
+            "duration": 120,
+            "activityType": "running",
+            "distance": {
+              "qty": 0.27,
+              "units": "km"
+            },
+            "speed": {
+              "qty": 2.25,
+              "units": "m/s"
+            }
+          },
+          {
+            "start": "2026-11-21 6:16:17 AM +0900",
+            "end": "2026-11-21 6:17:47 AM +0900",
+            "duration": 90,
+            "activityType": "running",
+            "distance": {
+              "qty": 0.135,
+              "units": "km"
+            },
+            "speed": {
+              "qty": 1.5,
+              "units": "m/s"
+            }
+          },
+          {
+            "start": "2026-11-21 6:17:47 AM +0900",
+            "end": "2026-11-21 6:19:47 AM +0900",
+            "duration": 120,
+            "activityType": "running",
+            "distance": {
+              "qty": 0.27,
+              "units": "km"
+            },
+            "speed": {
+              "qty": 2.25,
+              "units": "m/s"
+            }
+          },
+          {
+            "start": "2026-11-21 6:19:47 AM +0900",
+            "end": "2026-11-21 6:21:17 AM +0900",
+            "duration": 90,
+            "activityType": "running",
+            "distance": {
+              "qty": 0.135,
+              "units": "km"
+            },
+            "speed": {
+              "qty": 1.5,
+              "units": "m/s"
+            }
+          },
+          {
+            "start": "2026-11-21 6:21:17 AM +0900",
+            "end": "2026-11-21 6:23:17 AM +0900",
+            "duration": 120,
+            "activityType": "running",
+            "distance": {
+              "qty": 0.27,
+              "units": "km"
+            },
+            "speed": {
+              "qty": 2.25,
+              "units": "m/s"
+            }
+          },
+          {
+            "start": "2026-11-21 6:23:17 AM +0900",
+            "end": "2026-11-21 6:24:47 AM +0900",
+            "duration": 90,
+            "activityType": "running",
+            "distance": {
+              "qty": 0.135,
+              "units": "km"
+            },
+            "speed": {
+              "qty": 1.5,
+              "units": "m/s"
+            }
+          },
+          {
+            "start": "2026-11-21 6:24:47 AM +0900",
+            "end": "2026-11-21 6:26:47 AM +0900",
+            "duration": 120,
+            "activityType": "running",
+            "distance": {
+              "qty": 0.27,
+              "units": "km"
+            },
+            "speed": {
+              "qty": 2.25,
+              "units": "m/s"
+            }
+          },
+          {
+            "start": "2026-11-21 6:26:47 AM +0900",
+            "end": "2026-11-21 6:28:17 AM +0900",
+            "duration": 90,
+            "activityType": "running",
+            "distance": {
+              "qty": 0.135,
+              "units": "km"
+            },
+            "speed": {
+              "qty": 1.5,
+              "units": "m/s"
+            }
+          },
+          {
+            "start": "2026-11-21 6:28:17 AM +0900",
+            "end": "2026-11-21 6:30:17 AM +0900",
+            "duration": 120,
+            "activityType": "running",
+            "distance": {
+              "qty": 0.27,
+              "units": "km"
+            },
+            "speed": {
+              "qty": 2.25,
+              "units": "m/s"
+            }
+          },
+          {
+            "start": "2026-11-21 6:30:17 AM +0900",
+            "end": "2026-11-21 6:35:17 AM +0900",
+            "duration": 300,
+            "activityType": "running",
+            "distance": {
+              "qty": 0.39,
+              "units": "km"
+            },
+            "speed": {
+              "qty": 1.3,
+              "units": "m/s"
+            }
+          }
+        ]
+      },
+      {
+        "id": "6C1B2A90-STRENGTH-0002",
+        "name": "Traditional Strength Training",
+        "start": "2026-11-20 7:00:00 AM +0900",
+        "end": "2026-11-20 8:02:00 AM +0900",
+        "duration": 3720,
+        "activeEnergyBurned": {
+          "qty": 1100,
+          "units": "kJ"
+        },
+        "heartRate": {
+          "avg": {
+            "qty": 112
+          },
+          "max": {
+            "qty": 148
+          }
+        }
+      }
+    ]
+  }
+}
