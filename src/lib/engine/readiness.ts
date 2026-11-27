@@ -11,8 +11,8 @@ import type { Insight, MetricName, ReadinessLevel } from "./types";
  *   - "Current" value = latest entry dated today or yesterday (older counts as missing).
  *   - Baseline = mean of up to 7 entries before the current one within 30 days, minimum 3.
  *   - A signal is evaluable if it has a current value (and, for HRV/RHR, a baseline).
- *   - Level is good/ok only when all three signals are evaluable. With missing signals the
- *     level is "unknown" unless 2+ evaluable signals are already flagged ("low").
+ *   - 2+ flags → "low". Otherwise good/ok needs at least 2 of the 3 signals evaluable;
+ *     with fewer the level is "unknown". Any missing signal gets an insight naming it.
  */
 
 export const READINESS_RULES = {
@@ -23,9 +23,20 @@ export const READINESS_RULES = {
   baselineMin: 3,
   lookbackDays: 30,
   maxStalenessDays: 1,
+  /** Signals needed for good/ok (2+ flags give "low" regardless). */
+  minEvaluable: 2,
 } as const;
 
 type Signal = "hrv" | "rhr" | "sleep";
+
+const SIGNAL_LABEL: Record<Signal, string> = { hrv: "HRV", rhr: "resting heart rate", sleep: "sleep" };
+
+function missingReason(s: SignalResult): string {
+  const label = SIGNAL_LABEL[s.signal];
+  return s.current
+    ? `${label}: no baseline yet (needs 3 earlier days)`
+    : `${label}: no value from today or yesterday`;
+}
 
 export interface SignalResult {
   signal: Signal;
@@ -157,10 +168,10 @@ export function computeReadiness(metrics: Map<MetricName, Map<string, number>>, 
   const signals = { hrv, rhr, sleep };
   const all = [hrv, rhr, sleep];
   const flags = all.filter((s) => s.flagged).map((s) => s.signal);
-  const allEvaluable = all.every((s) => s.evaluable);
+  const evaluable = all.filter((s) => s.evaluable).length;
   let level: ReadinessLevel;
   if (flags.length >= 2) level = "low";
-  else if (!allEvaluable) level = "unknown";
+  else if (evaluable < READINESS_RULES.minEvaluable) level = "unknown";
   else level = flags.length === 1 ? "ok" : "good";
 
   if (level === "low") {
@@ -169,17 +180,32 @@ export function computeReadiness(metrics: Map<MetricName, Map<string, number>>, 
       severity: "warn",
       title: "Recovery flag",
       text: "Two or more recovery signals are down (HRV, resting HR or sleep). Your next session is adjusted to be easier.",
-      evidence: flags.map((f) => `Flagged: ${f}`),
+      evidence: flags.map((f) => `Flagged: ${SIGNAL_LABEL[f]}`),
     });
-  } else if (level === "unknown") {
-    const missing = all.filter((s) => !s.evaluable).map((s) => s.signal);
-    insights.push({
-      id: "readiness.unknown",
-      severity: "info",
-      title: "Readiness unknown",
-      text: "Not enough recent data to judge recovery. Sync HRV, resting heart rate and sleep to get a readiness score.",
-      evidence: missing.map((m) => `Missing or no baseline: ${m}`),
-    });
+  }
+
+  const missing = all.filter((s) => !s.evaluable);
+  if (missing.length) {
+    const names = missing.map((s) => SIGNAL_LABEL[s.signal]);
+    const list =
+      names.length === 1 ? names[0]! : `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
+    insights.push(
+      level === "unknown"
+        ? {
+            id: "readiness.unknown",
+            severity: "info",
+            title: "Readiness unknown",
+            text: `Not enough recent data to judge recovery: missing ${list}. At least 2 of HRV, resting heart rate and sleep are needed.`,
+            evidence: missing.map(missingReason),
+          }
+        : {
+            id: "readiness.partial",
+            severity: "info",
+            title: `Readiness without ${list}`,
+            text: `Readiness is based on ${evaluable} of 3 signals; ${list} ${missing.length === 1 ? "is" : "are"} missing.`,
+            evidence: missing.map(missingReason),
+          },
+    );
   }
 
   return { level, flags, signals, insights };

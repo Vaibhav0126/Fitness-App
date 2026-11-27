@@ -55,17 +55,46 @@ describe("readiness", () => {
     expect(res.signals.hrv.delta).toBe(-16);
   });
 
-  it("missing data is unknown, never low", () => {
+  it("fewer than 2 evaluable signals is unknown, never low", () => {
     expect(r([]).level).toBe("unknown");
-    // only sleep (short) → one flag but other signals missing → unknown
-    expect(r(metricSeries("sleep_hours", today, [5])).level).toBe("unknown");
-    // HRV without baseline (2 earlier nights) → not evaluable
+    // only sleep (short): one flag, but only 1 of 3 signals → unknown
+    const onlySleep = r(metricSeries("sleep_hours", today, [5]));
+    expect(onlySleep.level).toBe("unknown");
+    const ins = onlySleep.insights.find((i) => i.id === "readiness.unknown");
+    expect(ins?.text).toMatch(/missing HRV and resting heart rate/);
+  });
+
+  it("2 of 3 evaluable signals allow good/ok and name the missing one", () => {
+    // HRV has only 2 earlier nights → no baseline → not evaluable
     const thin = [
       ...metricSeries("hrv_sdnn_ms", today, [50, 50, 40]),
       ...metricSeries("resting_hr", today, [55, 55, 55, 55]),
       ...metricSeries("sleep_hours", today, [7]),
     ];
-    expect(r(thin).level).toBe("unknown");
+    const good = r(thin);
+    expect(good.level).toBe("good");
+    const partial = good.insights.find((i) => i.id === "readiness.partial");
+    expect(partial?.title).toBe("Readiness without HRV");
+    expect(partial?.evidence).toEqual(["HRV: no baseline yet (needs 3 earlier days)"]);
+
+    const shortSleep = thin.map((m) => (m.name === "sleep_hours" ? { ...m, value: 5 } : m));
+    expect(r(shortSleep).level).toBe("ok");
+
+    // resting HR absent entirely → named as having no recent value
+    const noRhr = r([
+      ...metricSeries("hrv_sdnn_ms", today, [50, 50, 50, 50]),
+      ...metricSeries("sleep_hours", today, [7]),
+    ]);
+    expect(noRhr.level).toBe("good");
+    expect(noRhr.insights.find((i) => i.id === "readiness.partial")?.evidence).toEqual([
+      "resting heart rate: no value from today or yesterday",
+    ]);
+  });
+
+  it("no missing-signal insight when all three are evaluable", () => {
+    expect(
+      r(healthy).insights.some((i) => i.id.startsWith("readiness.partial") || i.id === "readiness.unknown"),
+    ).toBe(false);
   });
 
   it("two real flags are low even when the third signal is missing", () => {
