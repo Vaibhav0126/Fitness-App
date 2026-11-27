@@ -262,61 +262,65 @@ export function PlanEditor({ initial, readOnly }: { initial: PlanConfig; readOnl
               {cfg.progression.shinMax}/10 repeats the week.
             </CardDescription>
             <div className="grid gap-2">
-              <div className="grid grid-cols-[3rem_4rem_5rem_5rem_1fr_2.5rem] gap-2 text-xs text-muted-foreground">
-                <span>Week</span>
-                <span>Reps</span>
-                <span>Run</span>
-                <span>Walk</span>
-                <span>Note</span>
-              </div>
-              {cfg.runPlan.map((w, i) => (
-                <div
-                  key={w.week}
-                  className="grid grid-cols-[3rem_4rem_5rem_5rem_1fr_2.5rem] items-center gap-2"
-                >
-                  <span className="text-sm">{w.week}</span>
-                  <Input
-                    aria-label={`Week ${w.week} reps`}
-                    type="number"
-                    min={1}
-                    value={w.reps}
-                    onChange={(e) => update((c) => ((c.runPlan[i]!.reps = num(e.target.value)), c))}
-                  />
-                  <Input
-                    aria-label={`Week ${w.week} run (m:ss)`}
-                    defaultValue={mmss(w.runS)}
-                    onBlur={(e) => update((c) => ((c.runPlan[i]!.runS = fromMmss(e.target.value)), c))}
-                  />
-                  <Input
-                    aria-label={`Week ${w.week} walk (m:ss)`}
-                    defaultValue={mmss(w.walkS)}
-                    onBlur={(e) => update((c) => ((c.runPlan[i]!.walkS = fromMmss(e.target.value)), c))}
-                  />
-                  <Input
-                    aria-label={`Week ${w.week} note`}
-                    value={w.note ?? ""}
-                    onChange={(e) =>
-                      update((c) => {
-                        const v = e.target.value;
-                        if (v) c.runPlan[i]!.note = v;
-                        else delete c.runPlan[i]!.note;
-                        return c;
-                      })
-                    }
-                  />
-                  <IconButton
-                    label={`Remove week ${w.week}`}
-                    disabled={cfg.runPlan.length <= 1}
-                    onClick={() =>
-                      update((c) => {
-                        c.runPlan.splice(i, 1);
-                        c.runPlan.forEach((x, j) => (x.week = j + 1));
-                        return c;
-                      })
-                    }
-                  />
+              <div className="-mx-1 overflow-x-auto px-1">
+                <div className="grid min-w-[26rem] gap-2">
+                  <div className="grid grid-cols-[3rem_4rem_5rem_5rem_1fr_2.5rem] gap-2 text-xs text-muted-foreground">
+                    <span>Week</span>
+                    <span>Reps</span>
+                    <span>Run</span>
+                    <span>Walk</span>
+                    <span>Note</span>
+                  </div>
+                  {cfg.runPlan.map((w, i) => (
+                    <div
+                      key={w.week}
+                      className="grid grid-cols-[3rem_4rem_5rem_5rem_1fr_2.5rem] items-center gap-2"
+                    >
+                      <span className="text-sm">{w.week}</span>
+                      <Input
+                        aria-label={`Week ${w.week} reps`}
+                        type="number"
+                        min={1}
+                        value={w.reps}
+                        onChange={(e) => update((c) => ((c.runPlan[i]!.reps = num(e.target.value)), c))}
+                      />
+                      <Input
+                        aria-label={`Week ${w.week} run (m:ss)`}
+                        defaultValue={mmss(w.runS)}
+                        onBlur={(e) => update((c) => ((c.runPlan[i]!.runS = fromMmss(e.target.value)), c))}
+                      />
+                      <Input
+                        aria-label={`Week ${w.week} walk (m:ss)`}
+                        defaultValue={mmss(w.walkS)}
+                        onBlur={(e) => update((c) => ((c.runPlan[i]!.walkS = fromMmss(e.target.value)), c))}
+                      />
+                      <Input
+                        aria-label={`Week ${w.week} note`}
+                        value={w.note ?? ""}
+                        onChange={(e) =>
+                          update((c) => {
+                            const v = e.target.value;
+                            if (v) c.runPlan[i]!.note = v;
+                            else delete c.runPlan[i]!.note;
+                            return c;
+                          })
+                        }
+                      />
+                      <IconButton
+                        label={`Remove week ${w.week}`}
+                        disabled={cfg.runPlan.length <= 1}
+                        onClick={() =>
+                          update((c) => {
+                            c.runPlan.splice(i, 1);
+                            c.runPlan.forEach((x, j) => (x.week = j + 1));
+                            return c;
+                          })
+                        }
+                      />
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
               <div>
                 <Button
                   variant="outline"
