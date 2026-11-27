@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { eq, inArray } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { getDb } from "@/lib/db/client";
 import { scoped } from "@/lib/db/scoped";
@@ -73,10 +73,16 @@ describe("user isolation", () => {
     await s.insert(dailyMetric, [
       { userId: B, date: "2026-11-21", name: "steps", value: 1, source: "manual" } as never,
     ]);
-    const [row] = await db.select().from(dailyMetric).where(eq(dailyMetric.name, "steps"));
+    const [row] = await db
+      .select()
+      .from(dailyMetric)
+      .where(and(eq(dailyMetric.name, "steps"), inArray(dailyMetric.userId, [A, B])));
     expect(row?.userId).toBe(A);
     await s.update(dailyMetric, { userId: B, value: 2 } as never, eq(dailyMetric.name, "steps"));
-    const [after] = await db.select().from(dailyMetric).where(eq(dailyMetric.name, "steps"));
+    const [after] = await db
+      .select()
+      .from(dailyMetric)
+      .where(and(eq(dailyMetric.name, "steps"), inArray(dailyMetric.userId, [A, B])));
     expect(after).toMatchObject({ userId: A, value: 2 });
   });
 
