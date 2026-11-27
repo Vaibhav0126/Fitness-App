@@ -4,25 +4,25 @@ Status: **approved 2026-11-27** (decisions in §5). Written 2026-11-27. Versions
 
 ## 1. Verified versions
 
-| Area | Package | Version | Notes |
-|---|---|---|---|
-| Runtime | Node.js | **24 LTS** (24.22.x) | Your local Node is 20.18. Vitest 5 needs ≥22.12 and ESLint 10 needs ≥20.19, so you need to upgrade. I'll pin it in `.nvmrc` and `engines`. |
-| Framework | next | 16.4.6 | App Router, Server Actions, Route Handlers |
-| | react / react-dom | 19.3.1 | |
-| Language | typescript | **6.0.3** (not 7.0.2) | See risk R1 |
-| DB | drizzle-orm / drizzle-kit | 0.45.4 / 0.31.11 | 1.0 is still RC. Use the stable release. |
-| | pg | 8.23.1 | Neon's current guidance for Vercel Fluid. See risk R2. |
-| | @vercel/functions | 3.11.4 | `attachDatabasePool` |
-| Auth | better-auth | 1.7.28 | I'll check in Phase 1 which schema generator CLI is current. `@better-auth/cli` looks stale at 1.4.21. |
-| Email | resend | 6.40.1 | |
-| UI | tailwindcss | 4.3.5 | shadcn CLI 4.23.1 |
-| Charts | recharts | 3.11.1 | Lazy-loaded on the client |
-| Validation | zod | 4.6.7 | |
-| Tests | vitest / @playwright/test | 5.1.2 / 1.65.1 | |
-| Browser parsing | @zip.js/zip.js | 2.25.0 | Chosen over fflate: streaming plus Zip64 for very large exports |
-| | saxes | 6.0.0 | Last release was 2022, but it's stable and has one small dependency. I'll benchmark it against a line scanner in Phase 3. |
-| | fit-file-parser | 6.2.10 | Maintained (Nov 2026) |
-| Tooling | eslint 10.15 + typescript-eslint 8.74, prettier 3.10, pnpm 9 | | |
+| Area            | Package                                                      | Version               | Notes                                                                                                                                      |
+| --------------- | ------------------------------------------------------------ | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| Runtime         | Node.js                                                      | **24 LTS** (24.22.x)  | Your local Node is 20.18. Vitest 5 needs ≥22.12 and ESLint 10 needs ≥20.19, so you need to upgrade. I'll pin it in `.nvmrc` and `engines`. |
+| Framework       | next                                                         | 16.4.6                | App Router, Server Actions, Route Handlers                                                                                                 |
+|                 | react / react-dom                                            | 19.3.1                |                                                                                                                                            |
+| Language        | typescript                                                   | **6.0.3** (not 7.0.2) | See risk R1                                                                                                                                |
+| DB              | drizzle-orm / drizzle-kit                                    | 0.45.4 / 0.31.11      | 1.0 is still RC. Use the stable release.                                                                                                   |
+|                 | pg                                                           | 8.23.1                | Neon's current guidance for Vercel Fluid. See risk R2.                                                                                     |
+|                 | @vercel/functions                                            | 3.11.4                | `attachDatabasePool`                                                                                                                       |
+| Auth            | better-auth                                                  | 1.7.28                | I'll check in Phase 1 which schema generator CLI is current. `@better-auth/cli` looks stale at 1.4.21.                                     |
+| Email           | resend                                                       | 6.40.1                |                                                                                                                                            |
+| UI              | tailwindcss                                                  | 4.3.5                 | shadcn CLI 4.23.1                                                                                                                          |
+| Charts          | recharts                                                     | 3.11.1                | Lazy-loaded on the client                                                                                                                  |
+| Validation      | zod                                                          | 4.6.7                 |                                                                                                                                            |
+| Tests           | vitest / @playwright/test                                    | 5.1.2 / 1.65.1        |                                                                                                                                            |
+| Browser parsing | @zip.js/zip.js                                               | 2.25.0                | Chosen over fflate: streaming plus Zip64 for very large exports                                                                            |
+|                 | saxes                                                        | 6.0.0                 | Last release was 2022, but it's stable and has one small dependency. I'll benchmark it against a line scanner in Phase 3.                  |
+|                 | fit-file-parser                                              | 6.2.10                | Maintained (Nov 2026)                                                                                                                      |
+| Tooling         | eslint 10.15 + typescript-eslint 8.74, prettier 3.10, pnpm 9 |                       |                                                                                                                                            |
 
 Every new dependency gets the "maintained and needed" check before I add it (spec §13).
 
@@ -75,6 +75,7 @@ Every new dependency gets the "maintained and needed" check before I add it (spe
 **R2. Database driver.** Neon and Vercel now recommend **`pg` with a pool plus `attachDatabasePool`** on Vercel Fluid compute, not `@neondatabase/serverless` (Neon suggests that one for platforms without pooling). `pg` also runs against a plain Postgres in CI and locally, so it's more portable (spec §2.5). → Use `drizzle-orm/node-postgres` everywhere. This deviates from spec §2.4 and §3, so I need your OK.
 
 **R3. Strava: the spec is out of date (API Policy, June 2026).**
+
 - New apps start in **Single Player Mode (capacity 1)**. A self-service upgrade in the dashboard raises it to 10. More than that needs review, with no SLA.
 - **A Strava subscription is required to create an app.** Standard-tier apps "are subject to subscription requirements … the developer or specified end users maintain an active Strava subscription". This may break the $0 rule if you don't already subscribe.
 - **Cache limit is 7 days** (§6.2), user deletions must propagate within 48 h (§6.3), and full deletion happens within 30 days of revoke, with written confirmation on request (§7.4, §2.5). The data must also live in a "transient cache", not a persistent index (§5.5).
@@ -85,21 +86,21 @@ Every new dependency gets the "maintained and needed" check before I add it (spe
 
 **R5. The engine spec and `reference/engine.js` differ.** Spec §6 says to keep behaviour "identical", but it also states rules the reference doesn't implement. Proposal: **wherever spec §6 is explicit, the spec wins; otherwise the reference wins.** Each difference gets a test and a line in `docs/engine.md`:
 
-| # | reference/engine.js | Spec §6 | Proposal |
-|---|---|---|---|
-| a | Baseline needs ≥3 prior entries within 30 days | "mean of previous 7 entries" | Previous ≤7 entries, **minimum 3**, else no baseline |
-| b | `good` if any metric exists with no flags | missing data → `unknown` | `unknown` unless at least 2 of the 3 signals have today's value *and* a baseline |
-| c | Progression on **top-weight** sets only | "every **working** set" (warm-ups are <60% of top) | Exclude warm-ups. Then require reps ≥ repHi on every set at the top weight, so lighter back-off sets don't block progression. |
-| d | Rep target clamped to ≥ repLo | `min(repHi, best+1)` | Keep the clamp: `min(hi, max(lo, best+1))` |
-| e | No-history text "1–2 reps in reserve" | "stop 2–3 reps short" | Spec text |
-| f | Bodyweight: reps only | reps, then suggest adding load | Spec |
-| g | e1RM for any reps | Epley only for reps ≤12 | Spec |
-| h | HR warning at cap **+5** | example warns at cap | Spec, plus an optional `hrTolerance` field (default 0) |
-| i | Fixed `tzOffsetMin` | IANA via `Intl` | Spec |
-| j | Schedule kinds `lift/run/rest` | adds `strength+run` | Spec: the Next page shows both blocks |
-| k | `hotelRoutine` is free-text strings | tuples | Spec (tuples), with a `note` string per trip kept from the reference |
-| l | Weekly volume: total sets | per muscle group, flag <10 or >22 | Spec, plus keep the reference's sessions/runs weekly table |
-| m | Runs dedupe by start time within 20 min | Apple Health dedupe at >80% overlap | Both: 80% overlap at import, 20-min guard in the engine |
+| #   | reference/engine.js                            | Spec §6                                            | Proposal                                                                                                                      |
+| --- | ---------------------------------------------- | -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| a   | Baseline needs ≥3 prior entries within 30 days | "mean of previous 7 entries"                       | Previous ≤7 entries, **minimum 3**, else no baseline                                                                          |
+| b   | `good` if any metric exists with no flags      | missing data → `unknown`                           | `unknown` unless at least 2 of the 3 signals have today's value _and_ a baseline                                              |
+| c   | Progression on **top-weight** sets only        | "every **working** set" (warm-ups are <60% of top) | Exclude warm-ups. Then require reps ≥ repHi on every set at the top weight, so lighter back-off sets don't block progression. |
+| d   | Rep target clamped to ≥ repLo                  | `min(repHi, best+1)`                               | Keep the clamp: `min(hi, max(lo, best+1))`                                                                                    |
+| e   | No-history text "1–2 reps in reserve"          | "stop 2–3 reps short"                              | Spec text                                                                                                                     |
+| f   | Bodyweight: reps only                          | reps, then suggest adding load                     | Spec                                                                                                                          |
+| g   | e1RM for any reps                              | Epley only for reps ≤12                            | Spec                                                                                                                          |
+| h   | HR warning at cap **+5**                       | example warns at cap                               | Spec, plus an optional `hrTolerance` field (default 0)                                                                        |
+| i   | Fixed `tzOffsetMin`                            | IANA via `Intl`                                    | Spec                                                                                                                          |
+| j   | Schedule kinds `lift/run/rest`                 | adds `strength+run`                                | Spec: the Next page shows both blocks                                                                                         |
+| k   | `hotelRoutine` is free-text strings            | tuples                                             | Spec (tuples), with a `note` string per trip kept from the reference                                                          |
+| l   | Weekly volume: total sets                      | per muscle group, flag <10 or >22                  | Spec, plus keep the reference's sessions/runs weekly table                                                                    |
+| m   | Runs dedupe by start time within 20 min        | Apple Health dedupe at >80% overlap                | Both: 80% overlap at import, 20-min guard in the engine                                                                       |
 
 **R6. `daily_metric.value numeric`.** Drizzle returns `numeric` as a string. → Use `double precision`.
 
@@ -116,6 +117,7 @@ Every new dependency gets the "maintained and needed" check before I add it (spe
 **R12. Phase 1 is very large.** → Split it into **1a** (scaffold, DB, auth, engine + tests, CI) and **1b** (settings/plan editor, CSV import, logger, five pages, seed/demo), with a review stop after each.
 
 Smaller items:
+
 - Better Auth's own rate limiter can use DB storage for auth routes. My Postgres limiter covers the ingest routes.
 - Use `noUncheckedIndexedAccess` with `strict`.
 - `ENCRYPTION_KEY` rotation: ciphertext is prefixed with a key id (`v1:`), with `ENCRYPTION_KEY_PREVIOUS` for re-encryption.
