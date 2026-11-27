@@ -10,6 +10,7 @@ import {
   workout,
   workoutInterval,
 } from "@/lib/db/schema";
+import { duplicateStrengthSessions, sessionKey } from "@/lib/importers/dedupe";
 import type { EngineStore, ExerciseMeta, IntervalRow, WorkoutRow } from "@/lib/engine/types";
 
 export const STORE_WINDOW_DAYS = 365;
@@ -41,37 +42,46 @@ export async function loadEngineStore(
   window: StoreWindow = storeWindow(new Date()),
 ): Promise<EngineStore> {
   const s = scoped(userId, db);
-  const [metrics, workouts, intervals, recentSets, olderLatestSets, feedback, aliases] = await Promise.all([
-    s.select(dailyMetric, gte(dailyMetric.date, window.sinceDate)),
-    s.select(workout, gte(workout.start, window.since)),
-    db
-      .select({ iv: workoutInterval })
-      .from(workoutInterval)
-      .innerJoin(workout, eq(workout.id, workoutInterval.workoutId))
-      .where(and(eq(workout.userId, userId), gte(workout.start, window.since))),
-    s.select(strengthSet, gte(strengthSet.performedAt, window.since)),
-    db
-      .select()
-      .from(strengthSet)
-      .where(
-        and(
-          eq(strengthSet.userId, userId),
-          sql`(${strengthSet.exercise}, ${strengthSet.performedAt}) in (
+  const [metrics, allWorkouts, intervals, recentSets, olderLatestSets, feedback, aliases] = await Promise.all(
+    [
+      s.select(dailyMetric, gte(dailyMetric.date, window.sinceDate)),
+      s.select(workout, gte(workout.start, window.since)),
+      db
+        .select({ iv: workoutInterval })
+        .from(workoutInterval)
+        .innerJoin(workout, eq(workout.id, workoutInterval.workoutId))
+        .where(and(eq(workout.userId, userId), gte(workout.start, window.since))),
+      s.select(strengthSet, gte(strengthSet.performedAt, window.since)),
+      db
+        .select()
+        .from(strengthSet)
+        .where(
+          and(
+            eq(strengthSet.userId, userId),
+            sql`(${strengthSet.exercise}, ${strengthSet.performedAt}) in (
             select exercise, max(performed_at) from strength_set
             where user_id = ${userId} and performed_at < ${window.since}
               and exercise not in (
                 select exercise from strength_set where user_id = ${userId} and performed_at >= ${window.since}
               )
             group by exercise)`,
+          ),
         ),
-      ),
-    s.select(runFeedback, gte(runFeedback.date, window.sinceDate)),
-    db
-      .select()
-      .from(exerciseAlias)
-      .where(or(isNull(exerciseAlias.userId), eq(exerciseAlias.userId, userId))),
-  ]);
-  const sets = [...olderLatestSets, ...recentSets];
+      s.select(runFeedback, gte(runFeedback.date, window.sinceDate)),
+      db
+        .select()
+        .from(exerciseAlias)
+        .where(or(isNull(exerciseAlias.userId), eq(exerciseAlias.userId, userId))),
+    ],
+  );
+  // One session per real-world session when several sources recorded it (CSV + API).
+  const dupes = duplicateStrengthSessions([...olderLatestSets, ...recentSets]);
+  const sets = [...olderLatestSets, ...recentSets].filter(
+    (x) => !dupes.has(sessionKey(x.source, x.performedAt)),
+  );
+  const workouts = allWorkouts.filter(
+    (w) => w.type !== "strength" || !dupes.has(sessionKey(w.source, w.start)),
+  );
 
   const ivByWorkout = new Map<string, IntervalRow[]>();
   for (const { iv } of intervals) {
