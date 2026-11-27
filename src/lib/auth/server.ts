@@ -3,6 +3,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { getDb } from "../db/client";
 import * as schema from "../db/schema";
+import { demoPlugin } from "./demo-plugin";
 import { authOptions } from "./options";
 
 function createAuth() {
@@ -11,7 +12,7 @@ function createAuth() {
     ...options,
     database: drizzleAdapter(getDb(), { provider: "pg", schema }),
     // nextCookies must stay last so Server Actions can set cookies.
-    plugins: [nextCookies()],
+    plugins: [demoPlugin(), nextCookies()],
   });
 }
 
