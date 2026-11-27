@@ -12,7 +12,9 @@ if (!/test/.test(new URL(DATABASE_URL).pathname))
 
 export default defineConfig({
   testDir: "test/e2e",
+  globalSetup: "./test/e2e/global-setup.ts",
   timeout: 60_000,
+  expect: { timeout: 15_000 },
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? [["github"], ["list"]] : "list",
   use: {

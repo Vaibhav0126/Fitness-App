@@ -35,7 +35,7 @@ export default async function ProfileSettings() {
             <option value="imperial">Imperial (lb, mi)</option>
           </Select>
           <p className="text-xs text-muted-foreground">
-            Data is stored in metric. Imperial converts weights and distances for display.
+            Data is stored in metric. Pages show metric for now; imperial display is planned.
           </p>
         </div>
       </ActionForm>

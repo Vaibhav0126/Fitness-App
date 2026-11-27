@@ -52,6 +52,20 @@ test("sign up → verify → onboard → import Hevy CSV → see the next workou
 
   await page.goto("/app/strength");
   await expect(page.getByText("Squat (Barbell)").first()).toBeVisible();
+
+  // Health Auto Export: parsed in a Web Worker, then uploaded in chunks.
+  await page.goto("/app/import?tab=hae");
+  await page
+    .getByLabel("Health Auto Export JSON (v2)")
+    .setInputFiles([
+      path.resolve("test/fixtures/hae-metrics.json"),
+      path.resolve("test/fixtures/hae-workouts.json"),
+    ]);
+  await expect(page.getByText(/workouts \(1 runs, \d+ intervals\)/)).toBeVisible();
+  await page.getByRole("button", { name: "Import", exact: true }).click();
+  await expect(page.getByText("Import complete.")).toBeVisible();
+  await page.goto("/app/runs");
+  await expect(page.getByText("Recent runs")).toBeVisible();
 });
 
 test("the demo is read-only", async ({ page }) => {
