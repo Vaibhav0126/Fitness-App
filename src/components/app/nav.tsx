@@ -7,6 +7,8 @@ const links = [
   { href: "/app/runs", label: "Runs" },
   { href: "/app/strength", label: "Strength" },
   { href: "/app/recovery", label: "Recovery" },
+  { href: "/app/log", label: "Log" },
+  { href: "/app/import", label: "Import" },
   { href: "/app/settings", label: "Settings" },
 ] as const;
 

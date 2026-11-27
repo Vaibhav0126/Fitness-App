@@ -82,6 +82,10 @@ export const planConfigSchema = z
       shinMax: z.number().min(0).max(10).default(3),
       runsPerWeek: z.number().int().min(1).max(7).default(2),
     }),
+    /** Run-walk interval classification for imported runs: run if speed > walkSpeedKmh + marginKmh. */
+    runClassification: z
+      .object({ walkSpeedKmh: z.number().positive(), marginKmh: z.number().min(0) })
+      .default({ walkSpeedKmh: 5.5, marginKmh: 1 }),
     keyLifts: z.array(z.string().min(1)),
     goals: z.array(
       z.object({

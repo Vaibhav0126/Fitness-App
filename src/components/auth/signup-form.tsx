@@ -1,4 +1,5 @@
 "use client";
+import { useHydrated } from "./use-hydrated";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -9,9 +10,11 @@ export function SignupForm() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+  const hydrated = useHydrated();
 
   return (
     <form
+      method="post"
       className="grid gap-4"
       onSubmit={async (e) => {
         e.preventDefault();
@@ -45,7 +48,7 @@ export function SignupForm() {
         hint="At least 10 characters."
       />
       <FormError message={error} />
-      <Button type="submit" disabled={pending}>
+      <Button type="submit" disabled={pending || !hydrated}>
         {pending ? "Creating account…" : "Create account"}
       </Button>
     </form>

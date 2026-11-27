@@ -17,6 +17,7 @@ export function RequestResetForm() {
   }
   return (
     <form
+      method="post"
       className="grid gap-4"
       onSubmit={async (e) => {
         e.preventDefault();
@@ -49,6 +50,7 @@ export function SetPasswordForm({ token }: { token: string }) {
   }
   return (
     <form
+      method="post"
       className="grid gap-4"
       onSubmit={async (e) => {
         e.preventDefault();

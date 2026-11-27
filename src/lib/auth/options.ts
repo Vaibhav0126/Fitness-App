@@ -1,5 +1,6 @@
 import type { BetterAuthOptions } from "better-auth";
 import { sendEmail } from "../email/send";
+import { demoGuard } from "./demo-guard";
 import { resetPasswordTemplate, verifyEmailTemplate } from "../email/templates";
 
 /**
@@ -13,6 +14,7 @@ export function authOptions() {
     baseURL: process.env.BETTER_AUTH_URL,
     secret: process.env.BETTER_AUTH_SECRET,
     telemetry: { enabled: false },
+    hooks: { before: demoGuard },
     emailAndPassword: {
       enabled: true,
       requireEmailVerification: true,

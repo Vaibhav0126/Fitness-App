@@ -68,25 +68,31 @@ export function volumeFlags(
       if (g) planned.add(g);
     }
   }
-  const out: Insight[] = [];
+  const low: string[] = [];
+  const high: string[] = [];
   for (const g of [...planned].sort()) {
     const n = w.groups[g] ?? 0;
-    if (n < VOLUME_MIN_SETS)
-      out.push({
-        id: `volume.${g}.low`,
-        severity: "info",
-        title: `Low volume: ${g}`,
-        text: `${n} working sets for ${g} last week, under ${VOLUME_MIN_SETS}.`,
-        evidence: [`Week of ${lastWeek}`, `${n} sets`, `Range ${VOLUME_MIN_SETS}–${VOLUME_MAX_SETS}`],
-      });
-    else if (n > VOLUME_MAX_SETS)
-      out.push({
-        id: `volume.${g}.high`,
-        severity: "warn",
-        title: `High volume: ${g}`,
-        text: `${n} working sets for ${g} last week, over ${VOLUME_MAX_SETS}. Consider trimming a set or two.`,
-        evidence: [`Week of ${lastWeek}`, `${n} sets`, `Range ${VOLUME_MIN_SETS}–${VOLUME_MAX_SETS}`],
-      });
+    if (n < VOLUME_MIN_SETS) low.push(`${g} ${n}`);
+    else if (n > VOLUME_MAX_SETS) high.push(`${g} ${n}`);
   }
+  // One insight per direction, listing every group, so a light template doesn't flood Today.
+  const out: Insight[] = [];
+  const range = `Range ${VOLUME_MIN_SETS}–${VOLUME_MAX_SETS} working sets per muscle group per week`;
+  if (high.length)
+    out.push({
+      id: "volume.high",
+      severity: "warn",
+      title: "High weekly volume",
+      text: `Over ${VOLUME_MAX_SETS} working sets last week: ${high.join(", ")}. Consider trimming a set or two.`,
+      evidence: [`Week of ${lastWeek}`, ...high.map((h) => `${h} sets`), range],
+    });
+  if (low.length)
+    out.push({
+      id: "volume.low",
+      severity: "info",
+      title: "Low weekly volume",
+      text: `Under ${VOLUME_MIN_SETS} working sets last week: ${low.join(", ")}.`,
+      evidence: [`Week of ${lastWeek}`, ...low.map((l) => `${l} sets`), range],
+    });
   return out;
 }

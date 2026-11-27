@@ -2,7 +2,7 @@
   "//": "TODO(ts7): move to TypeScript 7.x once typescript-eslint supports it (peer range is <6.1 as of 2026-11).",
   "compilerOptions": {
     "target": "ES2023",
-    "lib": ["dom", "dom.iterable", "es2023"],
+    "lib": ["dom", "dom.iterable", "es2024"],
     "allowJs": false,
     "skipLibCheck": true,
     "strict": true,

@@ -3,7 +3,7 @@ import type { PlanConfig } from "./config";
 import { resolveMetrics, rolling, series } from "./metrics";
 import { nextWorkout, type NextWorkout, scheduleFor, tripOn } from "./next";
 import { computeReadiness, type Readiness } from "./readiness";
-import { analyzeRun, collectRuns, planProgress, type PlannedRun } from "./runs";
+import { analyzeRun, collectRuns, feedbackFor, planProgress, type PlannedRun, runSummary } from "./runs";
 import {
   goalProgress,
   type GoalProgress,
@@ -38,6 +38,7 @@ export interface DashboardState {
     repeatPending: boolean;
     weeks: Array<PlanConfig["runPlan"][number] & { status: "done" | "current" | "upcoming" }>;
   };
+  /** Recent runs, oldest first. planWeek 0 = before planStart. */
   runs: Array<PlannedRun & { insights: Insight[] }>;
   lifts: LiftTrend[];
   keyLifts: string[];
@@ -63,6 +64,7 @@ export function computeState(store: EngineStore, cfg: PlanConfig, now: Date): Da
 
   const runs = collectRuns(store.workouts, tz, now);
   const plan = planProgress(runs, store.feedback, cfg, today);
+  const planned = new Map(plan.log.map((r) => [r.id, r]));
   const byExercise = sessionsByExercise(store.sets, tz, now);
 
   // ---- Today ----
@@ -216,7 +218,21 @@ export function computeState(store: EngineStore, cfg: PlanConfig, now: Date): Da
         status: plan.complete || p.week < plan.week ? "done" : p.week === plan.week ? "current" : "upcoming",
       })),
     },
-    runs: plan.log.slice(-50).map((r) => ({ ...r, insights: analyzeRun(r, cfg) })),
+    // All recent runs; runs before planStart get planWeek 0 ("before the plan").
+    runs: runs
+      .filter((r) => r.date <= today)
+      .map(
+        (r): PlannedRun =>
+          planned.get(r.id) ?? {
+            ...r,
+            planWeek: 0,
+            runInWeek: 0,
+            feedback: feedbackFor(r, store.feedback),
+            summary: runSummary(r),
+          },
+      )
+      .slice(-50)
+      .map((r) => ({ ...r, insights: r.planWeek ? analyzeRun(r, cfg) : [] })),
     lifts,
     keyLifts: cfg.keyLifts,
     goals,

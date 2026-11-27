@@ -1,0 +1,444 @@
+{
+  "data": {
+    "workouts": [
+      {
+        "id": "REAL-SHAPE-8X90-0001",
+        "name": "Outdoor Run",
+        "start": "2026-11-25 5:41:04 AM +0900",
+        "end": "2026-11-25 6:17:04 AM +0900",
+        "duration": 2160,
+        "distance": {
+          "qty": 3.703,
+          "units": "km"
+        },
+        "activeEnergyBurned": {
+          "qty": 290,
+          "units": "kcal"
+        },
+        "activities": [
+          {
+            "activityType": "running",
+            "index": 0,
+            "start": "2026-11-25 5:41:04 AM +0900",
+            "end": "2026-11-25 5:46:04 AM +0900",
+            "duration": 300,
+            "activeDuration": {
+              "qty": 300,
+              "units": "s"
+            },
+            "metrics": {
+              "speed": {
+                "qty": 1.42,
+                "units": "m/s"
+              },
+              "distance": {
+                "qty": 426.0,
+                "units": "m"
+              }
+            }
+          },
+          {
+            "activityType": "running",
+            "index": 1,
+            "start": "2026-11-25 5:46:04 AM +0900",
+            "end": "2026-11-25 5:47:34 AM +0900",
+            "duration": 90,
+            "activeDuration": {
+              "qty": 90,
+              "units": "s"
+            },
+            "metrics": {
+              "speed": {
+                "qty": 2.2,
+                "units": "m/s"
+              },
+              "distance": {
+                "qty": 198.0,
+                "units": "m"
+              },
+              "heartRateAverage": {
+                "qty": 138,
+                "units": "bpm"
+              },
+              "heartRateMaximum": {
+                "qty": 146,
+                "units": "bpm"
+              }
+            }
+          },
+          {
+            "activityType": "running",
+            "index": 2,
+            "start": "2026-11-25 5:47:34 AM +0900",
+            "end": "2026-11-25 5:49:34 AM +0900",
+            "duration": 120,
+            "activeDuration": {
+              "qty": 120,
+              "units": "s"
+            },
+            "metrics": {
+              "speed": {
+                "qty": 1.5,
+                "units": "m/s"
+              },
+              "distance": {
+                "qty": 180.0,
+                "units": "m"
+              }
+            }
+          },
+          {
+            "activityType": "running",
+            "index": 3,
+            "start": "2026-11-25 5:49:34 AM +0900",
+            "end": "2026-11-25 5:51:04 AM +0900",
+            "duration": 90,
+            "activeDuration": {
+              "qty": 90,
+              "units": "s"
+            },
+            "metrics": {
+              "speed": {
+                "qty": 2.21,
+                "units": "m/s"
+              },
+              "distance": {
+                "qty": 198.9,
+                "units": "m"
+              },
+              "heartRateAverage": {
+                "qty": 139,
+                "units": "bpm"
+              },
+              "heartRateMaximum": {
+                "qty": 147,
+                "units": "bpm"
+              }
+            }
+          },
+          {
+            "activityType": "running",
+            "index": 4,
+            "start": "2026-11-25 5:51:04 AM +0900",
+            "end": "2026-11-25 5:53:04 AM +0900",
+            "duration": 120,
+            "activeDuration": {
+              "qty": 120,
+              "units": "s"
+            },
+            "metrics": {
+              "speed": {
+                "qty": 1.5,
+                "units": "m/s"
+              },
+              "distance": {
+                "qty": 180.0,
+                "units": "m"
+              }
+            }
+          },
+          {
+            "activityType": "running",
+            "index": 5,
+            "start": "2026-11-25 5:53:04 AM +0900",
+            "end": "2026-11-25 5:54:34 AM +0900",
+            "duration": 90,
+            "activeDuration": {
+              "qty": 90,
+              "units": "s"
+            },
+            "metrics": {
+              "speed": {
+                "qty": 2.22,
+                "units": "m/s"
+              },
+              "distance": {
+                "qty": 199.8,
+                "units": "m"
+              },
+              "heartRateAverage": {
+                "qty": 140,
+                "units": "bpm"
+              },
+              "heartRateMaximum": {
+                "qty": 148,
+                "units": "bpm"
+              }
+            }
+          },
+          {
+            "activityType": "running",
+            "index": 6,
+            "start": "2026-11-25 5:54:34 AM +0900",
+            "end": "2026-11-25 5:56:34 AM +0900",
+            "duration": 120,
+            "activeDuration": {
+              "qty": 120,
+              "units": "s"
+            },
+            "metrics": {
+              "speed": {
+                "qty": 1.5,
+                "units": "m/s"
+              },
+              "distance": {
+                "qty": 180.0,
+                "units": "m"
+              }
+            }
+          },
+          {
+            "activityType": "running",
+            "index": 7,
+            "start": "2026-11-25 5:56:34 AM +0900",
+            "end": "2026-11-25 5:58:04 AM +0900",
+            "duration": 90,
+            "activeDuration": {
+              "qty": 90,
+              "units": "s"
+            },
+            "metrics": {
+              "speed": {
+                "qty": 2.23,
+                "units": "m/s"
+              },
+              "distance": {
+                "qty": 200.7,
+                "units": "m"
+              },
+              "heartRateAverage": {
+                "qty": 141,
+                "units": "bpm"
+              },
+              "heartRateMaximum": {
+                "qty": 149,
+                "units": "bpm"
+              }
+            }
+          },
+          {
+            "activityType": "running",
+            "index": 8,
+            "start": "2026-11-25 5:58:04 AM +0900",
+            "end": "2026-11-25 6:00:04 AM +0900",
+            "duration": 120,
+            "activeDuration": {
+              "qty": 120,
+              "units": "s"
+            },
+            "metrics": {
+              "speed": {
+                "qty": 1.5,
+                "units": "m/s"
+              },
+              "distance": {
+                "qty": 180.0,
+                "units": "m"
+              }
+            }
+          },
+          {
+            "activityType": "running",
+            "index": 9,
+            "start": "2026-11-25 6:00:04 AM +0900",
+            "end": "2026-11-25 6:01:34 AM +0900",
+            "duration": 90,
+            "activeDuration": {
+              "qty": 90,
+              "units": "s"
+            },
+            "metrics": {
+              "speed": {
+                "qty": 2.24,
+                "units": "m/s"
+              },
+              "distance": {
+                "qty": 201.6,
+                "units": "m"
+              },
+              "heartRateAverage": {
+                "qty": 142,
+                "units": "bpm"
+              },
+              "heartRateMaximum": {
+                "qty": 150,
+                "units": "bpm"
+              }
+            }
+          },
+          {
+            "activityType": "running",
+            "index": 10,
+            "start": "2026-11-25 6:01:34 AM +0900",
+            "end": "2026-11-25 6:03:34 AM +0900",
+            "duration": 120,
+            "activeDuration": {
+              "qty": 120,
+              "units": "s"
+            },
+            "metrics": {
+              "speed": {
+                "qty": 1.5,
+                "units": "m/s"
+              },
+              "distance": {
+                "qty": 180.0,
+                "units": "m"
+              }
+            }
+          },
+          {
+            "activityType": "running",
+            "index": 11,
+            "start": "2026-11-25 6:03:34 AM +0900",
+            "end": "2026-11-25 6:05:04 AM +0900",
+            "duration": 90,
+            "activeDuration": {
+              "qty": 90,
+              "units": "s"
+            },
+            "metrics": {
+              "speed": {
+                "qty": 2.25,
+                "units": "m/s"
+              },
+              "distance": {
+                "qty": 202.5,
+                "units": "m"
+              },
+              "heartRateAverage": {
+                "qty": 143,
+                "units": "bpm"
+              },
+              "heartRateMaximum": {
+                "qty": 151,
+                "units": "bpm"
+              }
+            }
+          },
+          {
+            "activityType": "running",
+            "index": 12,
+            "start": "2026-11-25 6:05:04 AM +0900",
+            "end": "2026-11-25 6:07:04 AM +0900",
+            "duration": 120,
+            "activeDuration": {
+              "qty": 120,
+              "units": "s"
+            },
+            "metrics": {
+              "speed": {
+                "qty": 1.5,
+                "units": "m/s"
+              },
+              "distance": {
+                "qty": 180.0,
+                "units": "m"
+              }
+            }
+          },
+          {
+            "activityType": "running",
+            "index": 13,
+            "start": "2026-11-25 6:07:04 AM +0900",
+            "end": "2026-11-25 6:08:34 AM +0900",
+            "duration": 90,
+            "activeDuration": {
+              "qty": 90,
+              "units": "s"
+            },
+            "metrics": {
+              "speed": {
+                "qty": 2.2600000000000002,
+                "units": "m/s"
+              },
+              "distance": {
+                "qty": 203.4,
+                "units": "m"
+              },
+              "heartRateAverage": {
+                "qty": 144,
+                "units": "bpm"
+              },
+              "heartRateMaximum": {
+                "qty": 152,
+                "units": "bpm"
+              }
+            }
+          },
+          {
+            "activityType": "running",
+            "index": 14,
+            "start": "2026-11-25 6:08:34 AM +0900",
+            "end": "2026-11-25 6:10:34 AM +0900",
+            "duration": 120,
+            "activeDuration": {
+              "qty": 120,
+              "units": "s"
+            },
+            "metrics": {
+              "speed": {
+                "qty": 1.5,
+                "units": "m/s"
+              },
+              "distance": {
+                "qty": 180.0,
+                "units": "m"
+              }
+            }
+          },
+          {
+            "activityType": "running",
+            "index": 15,
+            "start": "2026-11-25 6:10:34 AM +0900",
+            "end": "2026-11-25 6:12:04 AM +0900",
+            "duration": 90,
+            "activeDuration": {
+              "qty": 90,
+              "units": "s"
+            },
+            "metrics": {
+              "speed": {
+                "qty": 2.27,
+                "units": "m/s"
+              },
+              "distance": {
+                "qty": 204.3,
+                "units": "m"
+              },
+              "heartRateAverage": {
+                "qty": 145,
+                "units": "bpm"
+              },
+              "heartRateMaximum": {
+                "qty": 153,
+                "units": "bpm"
+              }
+            }
+          },
+          {
+            "activityType": "running",
+            "index": 16,
+            "start": "2026-11-25 6:12:04 AM +0900",
+            "end": "2026-11-25 6:17:04 AM +0900",
+            "duration": 300,
+            "activeDuration": {
+              "qty": 300,
+              "units": "s"
+            },
+            "metrics": {
+              "speed": {
+                "qty": 1.36,
+                "units": "m/s"
+              },
+              "distance": {
+                "qty": 408.0,
+                "units": "m"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
