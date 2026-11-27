@@ -64,11 +64,12 @@ describe("Shortcut payload v1", () => {
     });
   });
 
-  it("treats zeros as missing samples (locked phone), except steps and energy", () => {
-    const p = parse({ v: 1, days: [{ date: "2026-11-26", sleepHours: 0, hrvSdnnMs: 0, steps: 0 }] });
-    expect(shortcutToMetrics(p, "2026-11-26").metrics).toEqual([
-      { kind: "metric", date: "2026-11-26", name: "steps", value: 0 },
-    ]);
+  it("treats zeros as missing samples (locked phone), so they never overwrite real values", () => {
+    const p = parse({
+      v: 1,
+      days: [{ date: "2026-11-26", sleepHours: 0, hrvSdnnMs: 0, steps: 0, activeEnergyKcal: "0" }],
+    });
+    expect(shortcutToMetrics(p, "2026-11-26")).toEqual({ metrics: [], skipped: [] });
   });
 
   it("converts sleep sent in minutes or seconds", () => {

@@ -118,8 +118,9 @@ export function shortcutToMetrics(p: ShortcutPayload, today: string): ShortcutPa
         continue;
       }
       if (field === "sleepHours") v = sleepToHours(v);
-      // Zero sleep/HRV/HR/weight means "no samples" (e.g. the phone was locked), not a reading.
-      if (v === 0 && field !== "steps" && field !== "activeEnergyKcal") continue;
+      // Zero means "no samples": Calculate Statistics returns 0 when Health was unreadable
+      // (phone locked). Storing it would overwrite a real value sent by an earlier run.
+      if (v === 0) continue;
       if (v < spec.min || v > spec.max) {
         out.skipped.push({ date, field, reason: `out of range (${spec.min}–${spec.max})` });
         continue;
